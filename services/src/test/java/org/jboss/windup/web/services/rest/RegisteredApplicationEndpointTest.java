@@ -89,16 +89,15 @@ public class RegisteredApplicationEndpointTest extends AbstractTest
             try
             {
                 Response response = registeredAppTarget.request().post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
-                response.close();
 
-                RegisteredApplication application = (RegisteredApplication) response.getEntity();
+                RegisteredApplication application = response.readEntity(RegisteredApplication.class);
+                System.out.println("application input path: " + application);
+                this.assertFileContents(getClass().getResourceAsStream(DataProvider.TINY_SAMPLE_PATH),
+                        new FileInputStream(application.getInputPath()));
+                response.close();
 
                 Collection<RegisteredApplication> apps = registeredApplicationEndpoint.getRegisteredApplications();
                 Assert.assertEquals(1, apps.size());
-
-                this.assertFileContents(getClass().getResourceAsStream(DataProvider.TINY_SAMPLE_PATH),
-                            new FileInputStream(application.getInputPath()));
-
             }
             catch (Throwable t)
             {
