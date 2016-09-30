@@ -1,17 +1,14 @@
-import {HttpModule} from '@angular/http';
-
+import {HttpModule, BaseRequestOptions, Http, ConnectionBackend} from '@angular/http';
 import {TestBed, async, inject} from '@angular/core/testing';
-
-
 import 'rxjs/Rx';
 
 import {Constants} from '../../app/constants';
-
-
 import {RegisteredApplicationService} from "../../app/services/registeredapplication.service";
 import {RegisteredApplication} from "windup-services";
 import {KeycloakService} from "../../app/services/keycloak.service";
 import {FileService} from "../../app/services/file.service";
+import {MockBackend} from "@angular/http/testing";
+import {FileUploader} from "ng2-file-upload/ng2-file-upload";
 
 describe("Registered Application Service Test", () => {
     beforeEach(() => {
@@ -19,10 +16,23 @@ describe("Registered Application Service Test", () => {
             {
                 imports: [HttpModule],
                 providers: [
-                    Constants, FileService, RegisteredApplicationService, KeycloakService
+                    {
+                        provide: FileUploader,
+                        useValue: new FileUploader({})
+                    },
+                    Constants, FileService, RegisteredApplicationService, KeycloakService,
+                    MockBackend, BaseRequestOptions,
+                    {
+                        provide: Http,
+                        useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+                            return new Http(backend, defaultOptions);
+                        },
+                        deps: [MockBackend, BaseRequestOptions]
+                    }
                 ]
             }
         );
+
         TestBed.compileComponents().catch(error => console.error(error));
     });
 
