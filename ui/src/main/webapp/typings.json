@@ -1,6 +1,7 @@
 {
   "globalDependencies": {
-    "keycloak": "https://raw.githubusercontent.com/hawtio/hawtio/master/hawtio-web/src/main/d.ts/keycloak.d.ts"
+    "keycloak": "https://raw.githubusercontent.com/hawtio/hawtio/master/hawtio-web/src/main/d.ts/keycloak.d.ts",
+    "require": "registry:dt/require#2.1.20+20160919185614"
   },
   "dependencies": {
     "windup-services": "file:../../../../services/target/windup-services.d.ts"
