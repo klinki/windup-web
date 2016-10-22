@@ -42,6 +42,12 @@
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/@angularclass/hmr/-/hmr-1.2.1.tgz#991314ee4e9babeb0908dee25ee7c1b0aa31d44f"
 
+"@types/bootstrap":
+  version "3.3.32"
+  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-3.3.32.tgz#abaf4b364d086de0cb7791db0cfd55703b591fad"
+  dependencies:
+    "@types/jquery" "*"
+
 "@types/core-js@^0.9.0":
   version "0.9.34"
   resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-0.9.34.tgz#72c521d8e59fdaa8b65f76db71fa53c82c7c21c5"
@@ -50,23 +56,19 @@
   version "2.5.35"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.35.tgz#5566406dc8417d380d6c2f9562ec3c71ec28ef78"
 
+"@types/jquery@*":
+  version "2.0.33"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-2.0.33.tgz#684ef3a2e99f6fd2afc52a357e47ae05f51f4f6c"
+
+"@types/jstree":
+  version "3.3.32"
+  resolved "https://registry.yarnpkg.com/@types/jstree/-/jstree-3.3.32.tgz#25ba57a6c47d567082a5355ea82a5f904eebd0e6"
+  dependencies:
+    "@types/jquery" "*"
+
 "@types/node@^6.0.38":
   version "6.0.45"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.45.tgz#c4842a9d653d767831e4ff495b6008cc0d579966"
-
-"@types/protractor@^1.5.16":
-  version "1.5.20"
-  resolved "https://registry.yarnpkg.com/@types/protractor/-/protractor-1.5.20.tgz#7437e94b89af90d507eec9b9261a81a69a367300"
-  dependencies:
-    "@types/selenium-webdriver" "*"
-
-"@types/selenium-webdriver@*":
-  version "2.53.33"
-  resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-2.53.33.tgz#64672bae3acedf9d9e6bcfa8bdb7c37497751c3d"
-
-"@types/selenium-webdriver@2.44.26":
-  version "2.44.26"
-  resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-2.44.26.tgz#a397da7cc04c955e4ac1031563a5c55c23f61489"
 
 abbrev@1, abbrev@1.0.x:
   version "1.0.9"
@@ -2396,6 +2398,13 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
+imports-loader:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/imports-loader/-/imports-loader-0.6.5.tgz#ae74653031d59e37b3c2fb2544ac61aeae3530a6"
+  dependencies:
+    loader-utils "0.2.x"
+    source-map "0.1.x"
+
 in-publish@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/in-publish/-/in-publish-2.0.0.tgz#e20ff5e3a2afc2690320b6dc552682a9c7fadf51"
@@ -2692,7 +2701,7 @@ jquery-match-height@~0.7.0, jquery-match-height@0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/jquery-match-height/-/jquery-match-height-0.7.0.tgz#351e51f161ccef7de08ae64ada8c8dc5c1890cca"
 
-"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, jquery@>=1.7.1, jquery@>=1.8, jquery@>=1.9.0:
+"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, jquery@>=1.7.1, jquery@>=1.8, jquery@>=1.9.0, jquery@>=1.9.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.1.1.tgz#347c1c21c7e004115e0a4da32cece041fad3c8a3"
 
@@ -2787,6 +2796,12 @@ jsprim@^1.2.2:
     extsprintf "1.0.2"
     json-schema "0.2.3"
     verror "1.3.6"
+
+jstree:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/jstree/-/jstree-3.3.2.tgz#362b76304f289e8584fd0eb0383182b6d7cc73cf"
+  dependencies:
+    jquery ">=1.9.1"
 
 karma-chrome-launcher@^2.0.0:
   version "2.0.0"
@@ -4960,7 +4975,7 @@ source-map-support@^0.4.0, source-map-support@~0.4.0:
   dependencies:
     source-map "^0.5.3"
 
-source-map@^0.1.41:
+source-map@^0.1.41, source-map@0.1.x:
   version "0.1.43"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.1.43.tgz#c24bc146ca517c1471f5dacbe2571b2b7f9e3346"
   dependencies:
