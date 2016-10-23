@@ -73,7 +73,7 @@ module.exports = {
             name: ['app', 'vendor', 'polyfills']
         }),
         new HtmlWebpackPlugin({
-            template: 'src/index.html.ftl',
+            template: 'text!src/index.html.ftl',
             filename: 'index.html.ftl'
         }),
         // This is needed to suppress warning caused by some angular issue
