@@ -2739,6 +2739,13 @@ karma-jasmine@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.0.2.tgz#c0b3ab327bf207db60e17fa27db37cfdef5d8e6c"
 
+karma-junit-reporter:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/karma-junit-reporter/-/karma-junit-reporter-1.1.0.tgz#12f8ff82050607a1d4f1192f0211efde4b59ca3e"
+  dependencies:
+    path-is-absolute "^1.0.0"
+    xmlbuilder "8.2.2"
+
 karma-mocha-reporter@^2.0.3:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/karma-mocha-reporter/-/karma-mocha-reporter-2.2.0.tgz#20367b93f6651cd2c0d06b10d4eea3b81181fb4e"
@@ -5504,7 +5511,7 @@ xml2js@0.4.4:
     sax "0.6.x"
     xmlbuilder ">=1.0.0"
 
-xmlbuilder@>=1.0.0:
+xmlbuilder@>=1.0.0, xmlbuilder@8.2.2:
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-8.2.2.tgz#69248673410b4ba42e1a6136551d2922335aa773"
 
