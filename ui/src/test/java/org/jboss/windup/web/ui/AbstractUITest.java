@@ -136,8 +136,10 @@ public abstract class AbstractUITest
         };
 
         getDriver().navigate().to(getContextRoot());
-        Thread.sleep(5000);
         printBrowserLogs();
+
+        takeScreenshot("AbstractUITest", getDriver());
+        System.out.println("Page source: " + getDriver().getPageSource());
 
         wait.withTimeout(10, TimeUnit.SECONDS).until(loginButtonIsAvailable);
         WebElement loginElement = getDriver().findElement(By.id(SPLASH_PAGE_LOGIN_BUTTON_ID));
