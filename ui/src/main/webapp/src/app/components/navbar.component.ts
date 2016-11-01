@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {KeycloakService} from "../services/keycloak.service";
 import * as $ from 'jquery';
 import 'bootstrap';
+import {_keyValueDiffersFactory} from "@angular/core/src/application_module";
 
 @Component({
     selector: 'navbar',
@@ -23,7 +24,7 @@ export class NavbarComponent implements OnInit {
 
     logout(event:Event):void {
         event.preventDefault();
-        KeycloakService.logout();
+        this._keycloak.logout();
     }
 
     isActive(link:HTMLAnchorElement):boolean {
