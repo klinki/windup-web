@@ -25,7 +25,7 @@ export class TechnologiesReportComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.params.forEach((params: Params) => {
-            this.execID = +params['exec'];
+            this.execID = +params['executionId'];
         });
 
         this.appGrpService.getAll().toPromise().then(appGroups => this.appGroups = appGroups);
