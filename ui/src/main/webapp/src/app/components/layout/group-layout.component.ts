@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {ApplicationGroup} from "windup-services";
 import {RouteLinkProviderService} from "../../services/route-link-provider-service";
 import {MigrationIssuesComponent} from "../reports/migration-issues/migration-issues.component";
-import {TechnologiesReportComponent} from "../reports/technologies/technologies.report";
+import {TechnologiesReportComponent} from "../reports/technologies/technologies-report.component";
 import {WindupService} from "../../services/windup.service";
 import {ReportMenuItem} from "../navigation/context-menu-item.class";
 
@@ -27,7 +27,10 @@ export class GroupLayoutComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        this._activatedRoute.data.forEach((data: {applicationGroup: ApplicationGroup}) => {
+            this.applicationGroup = data.applicationGroup;
+            this.createContextMenuItems();
+        });
     }
 
     protected createContextMenuItems() {
@@ -40,7 +43,9 @@ export class GroupLayoutComponent implements OnInit {
             },
             {
                 label: 'Run Windup',
-                link: '',
+                action: () => {
+                    this._windupService.executeWindupGroup(this.applicationGroup.id);
+                },
                 icon: 'fa-rocket',
                 isEnabled: true
             },
