@@ -16,6 +16,8 @@ import {GroupLayoutComponent} from "./components/layout/group-layout.component";
 import {DefaultLayoutComponent} from "./components/layout/default-layout.component";
 import {ApplicationGroupResolve} from "./components/group/application-group.resolve";
 import {MigrationIssuesComponent} from "./components/reports/migration-issues/migration-issues.component";
+import {ProjectResolve} from "./services/project.resolve";
+import {GroupPageComponent} from "./components/group.page.component";
 
 export const appRoutes: Routes = [
     {path: "login", component: LoginComponent},
@@ -48,6 +50,9 @@ export const appRoutes: Routes = [
                     {path: '', component: ProjectListComponent, data: {displayName: "Project List"}},
                     {
                         path: ':projectId',
+                        resolve: {
+                            project: ProjectResolve
+                        },
                         data: {displayName: 'Group List'},
                         children: [
                             {path: '', component: GroupListComponent, data: {displayName: 'Group List'}},
