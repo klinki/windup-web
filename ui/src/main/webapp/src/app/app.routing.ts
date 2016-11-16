@@ -9,7 +9,7 @@ import {AnalysisContextFormComponent} from "./components/analysis-context-form.c
 import {ConfigurationComponent} from "./components/configuration.component";
 import {EditApplicationFormComponent} from "./components/edit-application-form.component";
 import {ConfirmDeactivateGuard} from "./confirm-deactivate.guard";
-import {TechnologiesReport} from "./components/reports/technologies/technologies.report";
+import {TechnologiesReportComponent} from "./components/reports/technologies/technologies-report.component";
 import {LoginComponent} from "./components/login.component";
 import {LoggedInGuard} from "./services/logged-in.guard";
 import {GroupLayoutComponent} from "./components/layout/group-layout.component";
@@ -69,7 +69,7 @@ export const appRoutes: Routes = [
                             { path: 'edit', component: RegisterApplicationFormComponent, data: {displayName: "Edit Application"}},
                         ]}
                     ]},
-                    {path: 'reports/:exec/technology-report', component: TechnologiesReport, data: {displayName: 'Technology Report'}},
+                    {path: 'reports/:exec/technology-report', component: TechnologiesReportComponent, data: {displayName: 'Technology Report'}},
                     {path: 'reports/:id/migration-issues', component: MigrationIssuesComponent}
                 ]
             },
