@@ -65,6 +65,7 @@ import {RouteLinkProviderService} from "./services/route-link-provider-service";
 import {ConfigurationResolve} from "./services/configuration.resolve";
 import {ProjectResolve} from "./services/project.resolve";
 import {ApplicationResolve} from "./services/application.resolve";
+import {ExecutionsListComponent} from "./components/executions/executions-list.component";
 
 
 @NgModule({
@@ -117,7 +118,8 @@ import {ApplicationResolve} from "./services/application.resolve";
         LoginComponent,
         ContextMenuComponent,
         GroupLayoutComponent,
-        DefaultLayoutComponent
+        DefaultLayoutComponent,
+        ExecutionsListComponent
     ],
     providers: [
         appRoutingProviders,
