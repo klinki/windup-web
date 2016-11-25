@@ -55,6 +55,12 @@ export class GroupLayoutComponent implements OnInit {
                 isEnabled: true
             },
             {
+                label: 'Executions',
+                link: '/groups/' + this.applicationGroup.id + '/executions',
+                icon: 'fa-flask',
+                isEnabled: true
+            },
+            {
                 label: 'Config',
                 link: this._routeLinkProviderService.getRouteForComponent(AnalysisContextFormComponent, {
                     groupId: this.applicationGroup.id

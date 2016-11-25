@@ -20,6 +20,8 @@ import {ProjectResolve} from "./services/project.resolve";
 import {ConfigurationResolve} from "./services/configuration.resolve";
 import {ApplicationResolve} from "./services/application.resolve";
 import {ExecutionsListComponent} from "./components/executions/executions-list.component";
+import {GroupExecutionsComponent} from "./components/executions/group-executions.component";
+import {AllExecutionsComponent} from "./components/executions/all-executions.component";
 
 export const appRoutes: Routes = [
     {path: "login", component: LoginComponent},
@@ -94,7 +96,8 @@ export const appRoutes: Routes = [
                     { path: 'reports/:executionId', children: [
                         {path: 'technology-report', component: TechnologiesReportComponent, data: {displayName: 'Technology Report'}},
                         {path: 'migration-issues', component: MigrationIssuesComponent}
-                    ]}
+                    ]},
+                    { path: 'executions', component: GroupExecutionsComponent }
                 ]
             },
         ]
