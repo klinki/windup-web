@@ -100,7 +100,7 @@ public class WindupEndpointImpl implements WindupEndpoint
         }
         entityManager.merge(execution);
 
-        messaging.createProducer().send(executorQueue, execution);
+        messaging.createProducer().send(executorQueue, execution.getId());
 
         return execution;
     }
