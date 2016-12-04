@@ -20,6 +20,9 @@ import {ProjectResolve} from "./services/project.resolve";
 import {ConfigurationResolve} from "./services/configuration.resolve";
 import {ApplicationResolve} from "./services/application.resolve";
 import {FullFlattenedRoute} from "./services/route-flattener.service";
+import {ExecutionsListComponent} from "./components/executions/executions-list.component";
+import {GroupExecutionsComponent} from "./components/executions/group-executions.component";
+import {AllExecutionsComponent} from "./components/executions/all-executions.component";
 
 export const appRoutes: Routes = [
     {path: "login", component: LoginComponent},
@@ -46,7 +49,8 @@ export const appRoutes: Routes = [
                         }
                     },
                     {path: "project-list",           component: ProjectListComponent,   data: {displayName: "Project List"}},
-                    {path: "application-group-form", component: ApplicationGroupForm,   data: {displayName: "Edit Application Group"}}
+                    {path: "application-group-form", component: ApplicationGroupForm,             data: {displayName: "Edit Application Group"}},
+                    {path: 'executions', component: AllExecutionsComponent}
                 ]
             },
             {
@@ -107,7 +111,35 @@ export const appRoutes: Routes = [
                         ]
                     }
                 ]
-            }
+            },
+            {
+                path: 'groups/:groupId',
+                component: GroupLayoutComponent,
+                resolve: {
+                    applicationGroup: ApplicationGroupResolve
+                },
+                children: [
+                    { path: '', component: GroupPageComponent },
+                    { path: 'edit', component: ApplicationGroupForm, data: {displayName: 'Edit Application Group'}},
+                    { path: 'analysis-context', component: AnalysisContextFormComponent, data: {displayName: "Edit Analysis Context"}, canDeactivate: [ConfirmDeactivateGuard]},
+                    { path: 'applications', children: [
+                        { path: 'register', component: RegisterApplicationFormComponent, data: {displayName: "Application Registration"}},
+                        {
+                            path: ':applicationId/edit',
+                            component: EditApplicationFormComponent,
+                            resolve: {
+                                application: ApplicationResolve
+                            },
+                            data: {displayName: "Edit Application"}
+                        },
+                    ]},
+                    { path: 'reports/:executionId', children: [
+                        {path: 'technology-report', component: TechnologiesReportComponent, data: {displayName: 'Technology Report'}},
+                        {path: 'migration-issues', component: MigrationIssuesComponent}
+                    ]},
+                    { path: 'executions', component: GroupExecutionsComponent }
+                ]
+            },
         ]
     }
 ];
