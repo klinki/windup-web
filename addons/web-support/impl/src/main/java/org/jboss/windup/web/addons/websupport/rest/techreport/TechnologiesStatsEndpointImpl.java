@@ -1,12 +1,9 @@
 package org.jboss.windup.web.addons.websupport.rest.techreport;
 
-import java.util.logging.Logger;
-
 import javax.inject.Singleton;
 
 import org.jboss.windup.graph.GraphContext;
-import org.jboss.windup.rules.apps.javaee.model.stats.TechnologiesStatsModel;
-import org.jboss.windup.rules.apps.javaee.model.stats.TechnologiesStatsService;
+import org.jboss.windup.rules.apps.javaee.model.stats.ProjectTechnologiesStatsService;
 import org.jboss.windup.web.addons.websupport.rest.graph.AbstractGraphResource;
 
 /**
@@ -21,8 +18,10 @@ public class TechnologiesStatsEndpointImpl extends AbstractGraphResource impleme
     public boolean computeTechStats(long executionId)
     {
         final GraphContext graphContext = this.getGraph(executionId);
-        TechnologiesStatsService technologiesStatsService = new TechnologiesStatsService(graphContext);
-        TechnologiesStatsModel stats = technologiesStatsService.computeStats();
+
+        ProjectTechnologiesStatsService technologiesStatsService = new ProjectTechnologiesStatsService(graphContext);
+        technologiesStatsService.computeStats();
+
         return true;
     }
 }

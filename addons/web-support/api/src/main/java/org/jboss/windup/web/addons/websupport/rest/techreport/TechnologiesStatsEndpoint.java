@@ -1,5 +1,7 @@
 package org.jboss.windup.web.addons.websupport.rest.techreport;
 
+import org.jboss.windup.web.addons.websupport.rest.FurnaceRESTGraphAPI;
+
 import javax.ws.rs.*;
 
 /**
@@ -10,7 +12,7 @@ import javax.ws.rs.*;
 @Path(TechnologiesStatsEndpoint.PATH_TECH_STATS)
 @Consumes("application/json")
 @Produces("application/json")
-public interface TechnologiesStatsEndpoint
+public interface TechnologiesStatsEndpoint extends FurnaceRESTGraphAPI
 {
     String PATH_TECH_STATS = "/techStats";
 
