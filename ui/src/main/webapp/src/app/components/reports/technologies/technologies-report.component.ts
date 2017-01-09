@@ -12,6 +12,7 @@ import {forkJoin} from "rxjs/observable/forkJoin";
 import {ProjectModel} from "../../../generated/tsModels/ProjectModel";
 import {FileModel} from "../../../generated/tsModels/FileModel";
 import {TechnologyKeyValuePairModel} from "../../../generated/tsModels/TechnologyKeyValuePairModel";
+import {RegisteredApplication} from "windup-services";
 
 @Component({
     selector: 'wu-technologies-report',
@@ -21,8 +22,9 @@ export class TechnologiesReportComponent implements OnInit {
 
     private execID: number;
     private technologiesStats: ProjectTechnologiesStatsModel[] = [];
-    private filteredTechnologiesStats;
+    private filteredTechnologiesStats: TechnologiesStats;
     private appGroups : ApplicationGroup[];
+    private currentGroup: ApplicationGroup;
 
     constructor(
         private route: ActivatedRoute,
@@ -39,6 +41,9 @@ export class TechnologiesReportComponent implements OnInit {
         });
 
         this.appGrpService.getAll().toPromise().then(appGroups => this.appGroups = appGroups);
+        this.route.parent.parent.data.subscribe((data: {applicationGroup: ApplicationGroup}) => {
+            this.currentGroup = data.applicationGroup;
+        });
     }
 
     fetchTechnologiesStats(): void {
@@ -47,7 +52,10 @@ export class TechnologiesReportComponent implements OnInit {
                 this.technologiesStats = stats;
                 let filteredStats = this.filterTechnologiesStats(stats);
                 let mergedStats = this.mergeTechnologyStats(filteredStats);
-                mergedStats.fileTypes = this.mergeFileTypesToOne(<any>mergedStats.fileTypes, ['.class', '.java'], 'Java');
+                mergedStats.fileTypes = this.mergeFileTypesToOne(<any>mergedStats.fileTypes, ['class', 'java'], 'Java');
+                mergedStats.fileTypes = this.calculateFileTypeUsagePercentage(mergedStats.fileTypes);
+                this.filteredTechnologiesStats = mergedStats;
+                console.log(this.filteredTechnologiesStats);
             },
             error => {
                 this._notificationService.error(utils.getErrorMessage(error));
@@ -56,8 +64,25 @@ export class TechnologiesReportComponent implements OnInit {
         );
     }
 
-    filterTechnologiesStats(techReports: ProjectTechnologiesStatsModel[]) {
-        let filter = this.appGroups[0].reportFilter;
+    /**
+     * This is workaround for RESTeasy returning sometimes ID and simetimes full entity
+     */
+    getFilterSelectedApplications(): RegisteredApplication[] {
+        let filterData = this.currentGroup.reportFilter.selectedApplications;
+
+        return filterData.map(appOrId => {
+            if (typeof appOrId !== 'object') {
+                let app = this.currentGroup.applications.find((item) => item.id === appOrId);
+
+                return app;
+            }
+
+            return appOrId;
+        });
+    }
+
+    filterTechnologiesStats(techReports: ProjectTechnologiesStatsModel[]): ProjectTechnologiesStatsModel[] {
+        let filter = this.currentGroup.reportFilter;
 
         if (!filter.enabled || filter.selectedApplications.length === 0) {
             return techReports;
@@ -69,10 +94,14 @@ export class TechnologiesReportComponent implements OnInit {
             return item.projectModel.flatMap((projectModel: ProjectModel) => projectModel.rootFileModel);
         });
 
+        let filteredStats = [];
+
         forkJoin(rootFileModelObservable).subscribe((rootFileModelArray: FileModel[]) => {
             indices = rootFileModelArray.map((fileModel, index) => {
-                let isApplicationSelected = filter.selectedApplications
-                    .some(selectedApp => fileModel.fileName === selectedApp.inputFilename);
+                let isApplicationSelected = this.getFilterSelectedApplications()
+                    .some(selectedApp => {
+                        return fileModel.fileName === selectedApp.inputFilename;
+                    });
 
                 if (isApplicationSelected) {
                     return index;
@@ -83,30 +112,10 @@ export class TechnologiesReportComponent implements OnInit {
 
             indices = indices.filter(index => index >= 0);
 
-            this.filteredTechnologiesStats = indices.map(index => techReports[index]);
+            filteredStats = indices.map(index => techReports[index]);
         });
 
-            /*
-            forkJoin(techReports.map(item => item.projectModel))
-                .subscribe((projectModelArray: ProjectModel[]) => {
-                    forkJoin(projectModelArray.map(projectModel => projectModel.rootFileModel))
-                        .subscribe((rootFileModelArray: FileModel[]) => {
-                            indices = rootFileModelArray.map((fileModel, index) => {
-                                let isApplicationSelected = filter.selectedApplications
-                                    .some(selectedApp => fileModel.fileName === selectedApp.inputFilename);
-
-                                if (isApplicationSelected) {
-                                    return index;
-                                } else {
-                                    return -1;
-                                }
-                            });
-
-                            indices = indices.filter(index => index >= 0);
-                        });
-                });
-            techReports.filter(item => {})
-            */
+        return filteredStats;
     }
 
     protected mergeArray(stats: ProjectTechnologiesStatsModel[], result: any, property: string) {
@@ -141,72 +150,40 @@ export class TechnologiesReportComponent implements OnInit {
         this.mergeArray(stats, result, 'technologies');
         this.mergeArray(stats, result, 'fileTypes');
 
-/*
-        let propertiesArray = stats.map(item => {
-            return item.technologiesStatsModel.flatMap(technologiesStats => technologiesStats.properties);
-        });
-
-        console.log(propertiesArray);
-
-        forkJoin(propertiesArray)
-            .subscribe((projectTechnologiesArray: TechnologyKeyValuePairModel[][]) => {
-                projectTechnologiesArray.forEach(technologiesArray => {
-                    technologiesArray.forEach(technology => {
-                        if (!result.technologies.hasOwnProperty(technology.name)) {
-                            result.technologies[technology.name] = 0;
-                        }
-
-                        result.technologies[technology.name] += technology.value;
-                    });
-                });
-            });
-
-        let fileTypes: Observable<TechnologyKeyValuePairModel[]>[] = stats.map(item => {
-            return item.technologiesStatsModel.flatMap(technologiesStats => technologiesStats.fileTypes);
-        });
-
-        forkJoin(fileTypes)
-            .subscribe((projectFileTypeArray: TechnologyKeyValuePairModel[][]) => {
-                projectFileTypeArray.forEach(fileTypeArray => {
-                    fileTypeArray.forEach(fileType => {
-                        if (!result.fileTypes.hasOwnProperty(fileType.name)) {
-                            result.fileTypes[fileType.name] = 0;
-                        }
-
-                        result.fileTypes[fileType.name] += fileType.value;
-                    })
-                });
-            });
-*/
         return result;
     }
 
     mergeFileTypesToOne(inputValues: TechnologyKeyValuePairModel[], mergedFileTypes: string[], outputFileType: string) {
         let mergedItem = {name: outputFileType, value: 0};
 
-        let outputArray = inputValues.slice(); // make copy of array
+        let output: Object = Object.assign({}, inputValues); // make copy of array
 
-        let indicesOfItemsToMerge = outputArray.map((item, index) => {
-            if (mergedFileTypes.indexOf(item.name) !== -1) {
-                mergedItem.value += item.value;
-                return index;
-            } else {
-                return -1;
+        mergedFileTypes.forEach(mergedFileType => {
+            if (output.hasOwnProperty(mergedFileType)) {
+                mergedItem.value += output[mergedFileType];
+                delete output[mergedFileType];
             }
-        }).filter(index => index >= 0)
-            .sort((a, b) => b - a);
+        });
 
-        indicesOfItemsToMerge.forEach(index => outputArray.splice(index, 1));
+        output[outputFileType] = mergedItem.value;
 
-        return outputArray;
+        return output;
     }
 
-    calculateFileTypeUsagePercentage(array: TechnologyKeyValuePairModel[]) {
-        let filesCount = array.reduce<number>((previous: number, item: TechnologyKeyValuePairModel) => {
-            return previous + item.value;
+    calculateFileTypeUsagePercentage(array: {[key: string]: number}) {
+        let output = Object.assign({}, array);
+
+        let arrayKeys = Object.getOwnPropertyNames(array);
+
+        let filesCount = arrayKeys.reduce<number>((previous: number, key: string) => {
+            return previous + array[key];
         }, 0);
 
+        arrayKeys.forEach(key => {
+            output[key] = Math.round((output[key] * 100) / filesCount);
+        });
 
+        return output;
     }
 
 
@@ -215,4 +192,9 @@ export class TechnologiesReportComponent implements OnInit {
         stats.forEach(item => map.set(item.key, item));
         return map;
     }
+}
+
+interface TechnologiesStats {
+    fileTypes: {[key: string]: number},
+    technologies: {[key: string]: number}
 }
