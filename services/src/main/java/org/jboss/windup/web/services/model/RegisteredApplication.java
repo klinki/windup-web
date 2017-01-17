@@ -21,7 +21,8 @@ public class RegisteredApplication implements Serializable
 {
     public enum RegistrationType {
         UPLOADED,
-        PATH
+        PATH,
+        VIRTUAL
     }
 
     private static final long serialVersionUID = 1L;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -416,7 +417,7 @@ public class RegisteredApplicationEndpointImpl implements RegisteredApplicationE
     {
         this.messaging.createProducer().send(this.packageDiscoveryQueue, application);
     }
-/*
+
     protected void createVirtualApplication(long appGroupId)
     {
         if (true)
@@ -462,5 +463,5 @@ public class RegisteredApplicationEndpointImpl implements RegisteredApplicationE
             this.entityManager.remove(application);
         }
     }
-*/
+
 }
