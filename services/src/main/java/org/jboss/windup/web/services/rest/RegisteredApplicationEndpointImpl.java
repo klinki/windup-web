@@ -99,6 +99,8 @@ public class RegisteredApplicationEndpointImpl implements RegisteredApplicationE
 
         this.deleteApplicationFileIfUploaded(application);
         this.entityManager.remove(application);
+
+        this.deleteVirtualApplication(group.getId());
     }
 
     @Override
@@ -126,6 +128,8 @@ public class RegisteredApplicationEndpointImpl implements RegisteredApplicationE
         this.uploadApplicationFile(inputParts.get(0), application, false);
         this.entityManager.merge(application);
         this.entityManager.merge(appGroup);
+
+        this.createVirtualApplication(appGroupId);
 
         return application;
     }
@@ -174,6 +178,8 @@ public class RegisteredApplicationEndpointImpl implements RegisteredApplicationE
         }
 
         this.entityManager.merge(group);
+        this.createVirtualApplication(appGroupId);
+
 
         return registeredApplicationList;
     }
@@ -308,6 +314,8 @@ public class RegisteredApplicationEndpointImpl implements RegisteredApplicationE
             this.uploadApplicationFile(inputPart, application, false);
             this.entityManager.merge(application);
             registeredApplications.add(application);
+
+            this.createVirtualApplication(appGroupId);
         }
 
         this.entityManager.merge(appGroup);
@@ -408,4 +416,51 @@ public class RegisteredApplicationEndpointImpl implements RegisteredApplicationE
     {
         this.messaging.createProducer().send(this.packageDiscoveryQueue, application);
     }
+/*
+    protected void createVirtualApplication(long appGroupId)
+    {
+        if (true)
+        {
+            return;
+        }
+
+
+        ApplicationGroup appGroup = this.applicationGroupService.getApplicationGroup(appGroupId);
+        Optional<RegisteredApplication> virtualApplication = appGroup.getApplications().stream()
+                .filter(application -> application.getRegistrationType() == RegisteredApplication.RegistrationType.VIRTUAL)
+                .findFirst();
+
+        if (!virtualApplication.isPresent() && appGroup.getApplications().size() > 1)
+        {
+            RegisteredApplication application = this.createApplication(appGroup);
+            application.setRegistrationType(RegisteredApplication.RegistrationType.VIRTUAL);
+            application.setTitle("Shared Libraries");
+            application.setApplicationGroup(appGroup);
+
+            this.entityManager.persist(application);
+            appGroup.addApplication(application);
+            this.entityManager.persist(appGroup);
+        }
+    }
+
+    protected void deleteVirtualApplication(long appGroupId)
+    {
+        if (true)
+        {
+            return;
+        }
+
+        ApplicationGroup appGroup = this.applicationGroupService.getApplicationGroup(appGroupId);
+        Optional<RegisteredApplication> virtualApplication = appGroup.getApplications().stream()
+                .filter(application -> application.getRegistrationType() == RegisteredApplication.RegistrationType.VIRTUAL)
+                .findFirst();
+
+        if (virtualApplication.isPresent() && appGroup.getApplications().size() <= 1)
+        {
+            RegisteredApplication application = virtualApplication.get();
+            appGroup.removeApplication(application);
+            this.entityManager.remove(application);
+        }
+    }
+*/
 }

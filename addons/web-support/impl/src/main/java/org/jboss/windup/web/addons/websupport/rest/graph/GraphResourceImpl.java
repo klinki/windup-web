@@ -49,21 +49,6 @@ public class GraphResourceImpl extends AbstractGraphResource implements GraphRes
     }
 
     @Override
-    public List<Map<String, Object>> getByType(Long executionID, String vertexType, String propertyName, String propertyValue, Integer depth, Boolean dedup) {
-        return this.getByType(executionID, vertexType, propertyName, propertyValue, depth, dedup, true);
-    }
-
-    @Override
-    public List<Map<String, Object>> getByType(Long executionID, String vertexType, Integer depth, Boolean includeInVertices) {
-        return this.getByType(executionID, vertexType, depth, false, null, null, includeInVertices);
-    }
-
-    @Override
-    public List<Map<String, Object>> getByType(Long executionID, String vertexType, Integer depth, Boolean dedup, String inEdges, String outEdges)
-    {
-        return this.getByType(executionID, vertexType, depth, dedup, inEdges, outEdges, true);
-    }
-
     public List<Map<String, Object>> getByType(Long executionID, String vertexType, Integer depth, Boolean dedup, String inEdges, String outEdges, Boolean includeInVertices)
     {
         List<String> inEdges_ = inEdges == null ? Collections.emptyList() : Arrays.asList(StringUtils.split(inEdges, ','));
