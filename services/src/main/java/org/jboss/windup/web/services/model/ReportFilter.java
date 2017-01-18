@@ -63,6 +63,9 @@ public class ReportFilter implements Serializable
     @Column(nullable = false)
     private boolean isEnabled = false;
 
+    @Column(nullable = false)
+    private boolean includeSharedLibraries = true;
+
     protected ReportFilter()
     {
         this.selectedApplications = new HashSet<>();
@@ -203,6 +206,16 @@ public class ReportFilter implements Serializable
         isEnabled = enabled;
     }
 
+    public boolean getIncludeSharedLibraries()
+    {
+        return includeSharedLibraries;
+    }
+
+    public void setIncludeSharedLibraries(boolean includeSharedLibraries)
+    {
+        this.includeSharedLibraries = includeSharedLibraries;
+    }
+
     public void clear()
     {
         this.clearIncludeCategories();
@@ -211,6 +224,7 @@ public class ReportFilter implements Serializable
         this.clearExcludeTags();
         this.clearSelectedApplications();
 
+        this.includeSharedLibraries = true;
         this.isEnabled = false;
     }
 }

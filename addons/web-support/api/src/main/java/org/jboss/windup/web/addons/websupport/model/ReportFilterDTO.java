@@ -13,4 +13,5 @@ public interface ReportFilterDTO
     Collection<String> getIncludeCategories();
     Collection<String> getExcludeCategories();
     boolean isEnabled();
+    boolean includeSharedLibraries();
 }

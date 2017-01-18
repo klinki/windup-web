@@ -100,7 +100,8 @@ export class TechnologiesReportComponent implements OnInit {
             indices = rootFileModelArray.map((fileModel, index) => {
                 let isApplicationSelected = this.getFilterSelectedApplications()
                     .some(selectedApp => {
-                        return fileModel.fileName === selectedApp.inputFilename;
+                        return (<any>filter).includeSharedLibraries  && fileModel.fileName === 'shared-libs' ||
+                            fileModel.fileName === selectedApp.inputFilename;
                     });
 
                 if (isApplicationSelected) {

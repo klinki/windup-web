@@ -18,6 +18,7 @@ public class ReportFilterDTOImpl implements ReportFilterDTO
     private Set<String> includeCategories;
     private Set<String> excludeCategories;
     private boolean isEnabled;
+    private boolean includeSharedLibraries;
 
     protected ReportFilterDTOImpl()
     {
@@ -40,6 +41,8 @@ public class ReportFilterDTOImpl implements ReportFilterDTO
                     .stream()
                     .map(RegisteredApplication::getInputPath)
                     .collect(Collectors.toSet());
+
+            this.includeSharedLibraries = filter.getIncludeSharedLibraries();
         }
         else
         {
@@ -52,6 +55,8 @@ public class ReportFilterDTOImpl implements ReportFilterDTO
             this.excludeCategories = new HashSet<>();
 
             this.selectedApplications = new HashSet<>();
+
+            this.includeSharedLibraries = true;
         }
     }
 
@@ -99,5 +104,11 @@ public class ReportFilterDTOImpl implements ReportFilterDTO
     public boolean isEnabled()
     {
         return isEnabled;
+    }
+
+    @Override
+    public boolean includeSharedLibraries()
+    {
+        return this.includeSharedLibraries;
     }
 }

@@ -53,7 +53,7 @@ export class ReportFilterComponent implements OnInit, OnDestroy {
         };
     }
 
-    private getDefaultFilter(applicationGroup: ApplicationGroup): ReportFilter {
+    private getDefaultFilter(applicationGroup: ApplicationGroup): any|ReportFilter {
         return {
             id: null,
             // applicationGroup: applicationGroup,
@@ -62,7 +62,8 @@ export class ReportFilterComponent implements OnInit, OnDestroy {
             excludeTags: [],
             includeCategories: [],
             excludeCategories: [],
-            enabled: false
+            enabled: false,
+            includeSharedLibraries: false
         };
     }
 
@@ -122,6 +123,7 @@ export class ReportFilterComponent implements OnInit, OnDestroy {
             this.filter.includeTags = [];
             this.filter.selectedApplications = [];
             this.filter.enabled = false;
+            (<any>this.filter).includeSharedLibraries = false;
         }
     }
 }
