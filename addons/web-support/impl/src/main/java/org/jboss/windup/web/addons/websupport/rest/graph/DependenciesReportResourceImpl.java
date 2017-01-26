@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.jboss.windup.graph.GraphContext;
 import org.jboss.windup.graph.model.ArchiveModel;
+import org.jboss.windup.graph.model.DuplicateProjectModel;
 import org.jboss.windup.graph.model.ProjectDependencyModel;
 import org.jboss.windup.graph.model.ProjectModel;
 import org.jboss.windup.graph.model.resource.FileModel;
@@ -78,6 +79,10 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
 
         for (ProjectModel child : parentNode.getChildProjects())
         {
+            if (child instanceof DuplicateProjectModel) {
+                child = ((DuplicateProjectModel) child).getCanonicalProject();
+            }
+
             GraphNode childGraphNode = this.addChilds(child, projectsMap, edges);
             edges.add(new GraphEdge(parentGraphNode.getId(), childGraphNode.getId()));
         }
