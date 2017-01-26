@@ -20,6 +20,7 @@ export class DependenciesGraphComponent implements OnInit, OnChanges {
     private edges;
     private nodes;
     private labels;
+    private groups;
 
     constructor() {
 
@@ -50,6 +51,7 @@ export class DependenciesGraphComponent implements OnInit, OnChanges {
 
             let edges = this.svg.selectAll(".edge");
             let nodes = this.svg.selectAll(".node");
+            let groups = this.svg.selectAll(".node-group");
             let labels = this.svg.selectAll('text');
 
             let ticked = () => {
@@ -59,11 +61,8 @@ export class DependenciesGraphComponent implements OnInit, OnChanges {
                     .attr("y2", d => d.target.y)
                     .attr("stroke", "grey");
 
-                this.nodes.attr("cx", d => d.x)
-                    .attr("cy", d => d.y);
-
-                this.labels.attr('x', d => d.x)
-                    .attr('y', d => d.y - 10);
+                this.labels.attr('transform', d => `translate(0, -10)`);
+                this.groups.attr('transform', d => `translate(${d.x}, ${d.y})`);
             };
 
             let simulation = d3.forceSimulation()
@@ -85,19 +84,20 @@ export class DependenciesGraphComponent implements OnInit, OnChanges {
                 .append("line")
                 .attr("class", "link");
 
-            this.nodes = nodes
-                .data(this._dependencies.nodes)
+            this.groups = groups.data(this._dependencies.nodes)
                 .enter()
-                .append("circle")
+                .append('g')
+                .attr('class', 'node-group');
+
+            this.groups
+                .append('circle')
                 .classed('node', true)
                 .classed('application', d => d.type === 'Application')
                 .classed('dependency', d => d.type === 'Dependency')
                 .attr("r", 6)
                 .style("fill", d => d.id);
 
-            this.labels = labels
-                .data(this._dependencies.nodes)
-                .enter()
+            this.labels = this.groups
                 .append('text')
                 .text(d => d.name)
                 .style('text-anchor', 'middle');
