@@ -94,6 +94,9 @@ import {RuleProviderExecutionsService} from "./components/reports/rule-provider-
 import {RuleProviderExecutionsComponent} from "./components/reports/rule-provider-executions/rule-provider-executions.component";
 import {initializeModelMappingData} from "./generated/tsModels/discriminator-mapping-data";
 import {RouteHistoryService} from "./services/route-history.service";
+import {DependenciesGraphComponent} from "./components/reports/dependencies/dependencies-graph.component";
+import {DependenciesService} from "./components/reports/dependencies/dependencies.service";
+import {DependenciesReportComponent} from "./components/reports/dependencies/dependencies-report.component";
 
 /**
  * Load all mapping data from the generated files.
@@ -170,7 +173,9 @@ initializeModelMappingData();
         ReportFilterIndicatorComponent,
         TechnologyTagComponent,
         ActiveExecutionsProgressbarComponent,
-        RuleProviderExecutionsComponent
+        RuleProviderExecutionsComponent,
+        DependenciesReportComponent,
+        DependenciesGraphComponent
     ],
     providers: [
         appRoutingProviders,
@@ -209,6 +214,7 @@ initializeModelMappingData();
         SchedulerService,
         RuleProviderExecutionsService,
         RouteHistoryService,
+        DependenciesService,
         {
             provide: RouteLinkProviderService,
             useFactory: () => {
