@@ -87,20 +87,47 @@ export class DependenciesGraphComponent implements OnInit, OnChanges {
             this.groups = groups.data(this._dependencies.nodes)
                 .enter()
                 .append('g')
-                .attr('class', 'node-group');
+                .attr('class', 'node-group')
+                .on('mouseover', (d) => this.setEdgesStroke(d))
+                .on('mouseout', (d) => this.setEdgesStroke(d, 1, 1));
 
             this.groups
                 .append('circle')
                 .classed('node', true)
                 .classed('application', d => d.type === 'Application')
                 .classed('dependency', d => d.type === 'Dependency')
-                .attr("r", 6)
-                .style("fill", d => d.id);
+                .attr("r", 6);
 
             this.labels = this.groups
                 .append('text')
                 .text(d => d.name)
                 .style('text-anchor', 'middle');
         }
+    }
+
+    setEdgesStroke(node, activeEdgeStroke: number = 1, inactiveEdgeStroke: number = 0) {
+        this.edges.attr('stroke-opacity', edge => {
+            let isActiveEdge = edge.source.id === node.id || edge.target.id === node.id;
+
+            return isActiveEdge ? activeEdgeStroke : inactiveEdgeStroke;
+        });
+
+        this.labels.attr('opacity', currentNode => {
+            let sourceOrTargetNode = this._dependencies.edges
+                .filter((edge: any) => edge.source.id === currentNode.id || edge.target.id === currentNode.id)
+                .filter((edge: any) => edge.source.id === node.id || edge.target.id === node.id);
+
+            let isActiveNode = sourceOrTargetNode.length > 0 || currentNode.id === node.id;
+
+            return isActiveNode ? activeEdgeStroke : inactiveEdgeStroke + 0.2;
+        });
+    }
+
+    showOnlyEdgesFromOrTo(node) {
+        this.edges.attr('stroke', edge => {
+            let isActiveEdge = edge.source.id === node.id || edge.target.id === node.id;
+
+            return isActiveEdge ? 1 : 0.1;
+        });
     }
 }
