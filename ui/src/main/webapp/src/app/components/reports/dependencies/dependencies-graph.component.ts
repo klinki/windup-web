@@ -22,6 +22,8 @@ export class DependenciesGraphComponent implements OnInit, OnChanges {
     private labels;
     private groups;
 
+    private simulation;
+
     constructor() {
 
     }
@@ -84,12 +86,41 @@ export class DependenciesGraphComponent implements OnInit, OnChanges {
                 .append("line")
                 .attr("class", "link");
 
+
+            let dragStart = (d) => {
+                if (!d3.event.active) {
+                    simulation.alphaTarget(0.3).restart();
+                }
+
+                d.fx = d.x;
+                d.fy = d.y;
+            };
+
+            let drag = (d) => {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            };
+
+            let dragEnd = (d) => {
+                if (!d3.event.active)
+                    simulation.alphaTarget(0);
+
+                d.fx = null;
+                d.fy = null;
+            };
+
             this.groups = groups.data(this._dependencies.nodes)
                 .enter()
                 .append('g')
                 .attr('class', 'node-group')
                 .on('mouseover', (d) => this.setEdgesStroke(d))
-                .on('mouseout', (d) => this.setEdgesStroke(d, 1, 1));
+                .on('mouseout', (d) => this.setEdgesStroke(d, 1, 1))
+                .call(
+                    d3.drag()
+                    .on('start', dragStart)
+                    .on('drag', drag)
+                    .on('end', dragEnd)
+                );
 
             this.groups
                 .append('circle')
@@ -104,6 +135,8 @@ export class DependenciesGraphComponent implements OnInit, OnChanges {
                 .style('text-anchor', 'middle');
         }
     }
+
+
 
     setEdgesStroke(node, activeEdgeStroke: number = 1, inactiveEdgeStroke: number = 0) {
         this.edges.attr('stroke-opacity', edge => {
