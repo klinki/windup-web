@@ -1,0 +1,169 @@
+package org.jboss.windup.web.addons.websupport.services;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.jboss.windup.graph.GraphContext;
+import org.jboss.windup.graph.model.DuplicateProjectModel;
+import org.jboss.windup.graph.model.ProjectModel;
+import org.jboss.windup.graph.model.resource.FileModel;
+import org.jboss.windup.rules.apps.javaee.model.EjbMessageDrivenModel;
+import org.jboss.windup.rules.apps.javaee.model.JNDIResourceModel;
+import org.jboss.windup.rules.apps.javaee.model.JaxRSWebServiceModel;
+import org.jboss.windup.rules.apps.javaee.model.JaxWSWebServiceModel;
+import org.jboss.windup.rules.apps.javaee.model.JmsDestinationModel;
+import org.jboss.windup.rules.apps.javaee.model.JmsDestinationType;
+import org.jboss.windup.web.addons.websupport.services.dependencies.GraphEdge;
+import org.jboss.windup.web.addons.websupport.services.dependencies.GraphNode;
+
+/**
+ * @author <a href="mailto:dklingenberg@gmail.com">David Klingenberg</a>
+ */
+public class TechnologiesDependenciesServiceImpl implements TechnologiesDependenciesService
+{
+    private GraphContext graphContext;
+
+    private Map<ProjectModel, GraphNode> projectModels = new HashMap<>();
+
+    public void setGraphContext(GraphContext context)
+    {
+        this.graphContext = context;
+    }
+
+    public GraphNode getOrCreateProjectModelGraphNode(ProjectModel projectModel)
+    {
+        if (projectModel instanceof DuplicateProjectModel)
+        {
+            projectModel = ((DuplicateProjectModel) projectModel).getCanonicalProject();
+        }
+
+        if (!this.projectModels.containsKey(projectModel))
+        {
+            Map<String, Object> data = new HashMap<>();
+
+            FileModel rootFileModel = projectModel.getRootFileModel();
+
+            if (rootFileModel != null)
+            {
+                data.put("filePath", rootFileModel.getFilePath());
+                data.put("fileName", rootFileModel.getFileName());
+            }
+
+            GraphNode graphNode = new GraphNode(projectModel.getName(), data, "Application");
+
+            this.projectModels.put(projectModel, graphNode);
+        }
+
+        return this.projectModels.get(projectModel);
+    }
+
+    @Override
+    public Object getJMQDependencies()
+    {
+        Iterable<EjbMessageDrivenModel> messageDrivenModels = this.graphContext.findAll(EjbMessageDrivenModel.class);
+
+        Map<String, Object> sources = new HashMap<>();
+        Map<String, Object> targets = new HashMap<>();
+
+        Map<String, GraphNode> graphNodes = new HashMap<>();
+        Set<GraphEdge> edges = new HashSet<>();
+
+        for (EjbMessageDrivenModel messageDrivenModel : messageDrivenModels)
+        {
+            JmsDestinationModel destinationModel = messageDrivenModel.getDestination();
+            String destinationName = destinationModel.getJndiLocation();
+
+            JmsDestinationType jmsDestination = destinationModel.getDestinationType();
+            String destinationTypeName;
+
+            if (jmsDestination != null) {
+                destinationTypeName = jmsDestination.name();
+            } else {
+                destinationTypeName = "JMS";
+            }
+
+
+            GraphNode mqGraphNode = new GraphNode(destinationName, null, destinationTypeName);
+
+            graphNodes.put(destinationName, mqGraphNode);
+
+            for (ProjectModel projectModel : messageDrivenModel.getApplications())
+            {
+
+                GraphNode projectGraphNode = this.getOrCreateProjectModelGraphNode(projectModel);
+                GraphEdge edge = new GraphEdge(projectGraphNode.getId(), mqGraphNode.getId(), "uses");
+
+                edges.add(edge);
+            }
+
+            targets.put(destinationName, destinationModel);
+        }
+        /*
+         * Iterable<JmsDestinationModel> jmsQueues = this.graphContext.getQuery().type(JmsDestinationModel.class)
+         * .has(JmsDestinationModel.DESTINATION_TYPE, JmsDestinationType.QUEUE.name()) .vertices(JmsDestinationModel.class);
+         * 
+         * Iterable<JmsDestinationModel> jmsTopics = this.graphContext.getQuery().type(JmsDestinationModel.class)
+         * .has(JmsDestinationModel.DESTINATION_TYPE, JmsDestinationType.TOPIC.name()) .vertices(JmsDestinationModel.class);
+         */
+
+        Iterable<JNDIResourceModel> jndiResources = this.graphContext.findAll(JNDIResourceModel.class);
+
+        for (JNDIResourceModel resource : jndiResources)
+        {
+            String location = resource.getJndiLocation();
+
+            GraphNode mqGraphNode;
+
+            if (!graphNodes.containsKey(location))
+            {
+                // todo: distinguish topic/queue
+                mqGraphNode = new GraphNode(location, null, "jmq");
+                graphNodes.put(location, mqGraphNode);
+            }
+
+            mqGraphNode = graphNodes.get(location);
+
+            for (ProjectModel projectModel : resource.getApplications())
+            {
+                GraphNode projectGraphNode = this.getOrCreateProjectModelGraphNode(projectModel);
+                GraphEdge edge = new GraphEdge(projectGraphNode.getId(), mqGraphNode.getId(), "exposes");
+
+                edges.add(edge);
+            }
+
+            sources.put(location, resource);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Object getDataSourceDependencies()
+    {
+        return null;
+    }
+
+    @Override
+    public Object getWSDependencies()
+    {
+        Iterable<JaxRSWebServiceModel> rsWebServiceModels = this.graphContext.findAll(JaxRSWebServiceModel.class);
+        Iterable<JaxWSWebServiceModel> wsWebServiceModels = this.graphContext.findAll(JaxWSWebServiceModel.class);
+
+        Map<String, Object> sources = new HashMap<>();
+        Map<String, Object> targets = new HashMap<>();
+
+        for (JaxRSWebServiceModel webServiceModel : rsWebServiceModels)
+        {
+            sources.put(webServiceModel.getPath(), webServiceModel);
+        }
+
+        for (JaxWSWebServiceModel webServiceModel : wsWebServiceModels)
+        {
+            sources.put(webServiceModel.toPrettyString(), webServiceModel);
+        }
+
+        return null;
+    }
+}
