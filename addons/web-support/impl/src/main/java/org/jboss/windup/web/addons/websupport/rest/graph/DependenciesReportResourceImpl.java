@@ -12,6 +12,8 @@ import org.jboss.windup.graph.model.ProjectDependencyModel;
 import org.jboss.windup.graph.model.ProjectModel;
 import org.jboss.windup.graph.model.resource.FileModel;
 import org.jboss.windup.graph.service.WindupConfigurationService;
+import org.jboss.windup.rules.apps.java.archives.model.ArchiveCoordinateModel;
+import org.jboss.windup.rules.apps.java.archives.model.IdentifiedArchiveModel;
 import org.jboss.windup.web.addons.websupport.services.TechnologiesDependenciesService;
 import org.jboss.windup.web.addons.websupport.services.dependencies.GraphEdge;
 import org.jboss.windup.web.addons.websupport.services.dependencies.GraphNode;
@@ -35,6 +37,7 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
         GraphContext graphContext = this.getGraph(executionId);
 
         Iterable<ArchiveModel> archiveModels = graphContext.findAll(ArchiveModel.class);
+        Iterable<IdentifiedArchiveModel> identifiedArchiveModels = graphContext.findAll(IdentifiedArchiveModel.class);
         Iterable<ProjectModel> projectModels = graphContext.findAll(ProjectModel.class);
         Iterable<ProjectDependencyModel> projectDependencies = graphContext.findAll(ProjectDependencyModel.class);
 
@@ -43,6 +46,11 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
 
         Map<ProjectModel, GraphNode> projectModelGraphNodeHashMap = new HashMap<>();
         Set<GraphEdge> edges = new HashSet<>();
+
+        for (IdentifiedArchiveModel identifiedArchive : identifiedArchiveModels)
+        {
+            this.addIdentifiedArchive(identifiedArchive, projectModelGraphNodeHashMap);
+        }
 
         for (FileModel inputPath : WindupConfigurationService.getConfigurationModel(graphContext).getInputPaths())
         {
@@ -86,6 +94,43 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
         this.dependenciesService.setGraphContext(graphContext);
 
         return this.dependenciesService.getDependencies();
+    }
+
+    protected void addIdentifiedArchive(IdentifiedArchiveModel identifiedArchiveModel, Map<ProjectModel, GraphNode> projectsMap)
+    {
+        Map<String, Object> data = new HashMap<>();
+
+        Map<String, Object> mavenData = new HashMap<>();
+        ArchiveCoordinateModel coordinate = identifiedArchiveModel.getCoordinate();
+
+        String name;
+
+        if (coordinate != null) {
+            name = coordinate.getArtifactId();
+
+            mavenData.put("artifactId", coordinate.getArtifactId());
+            mavenData.put("groupId", coordinate.getGroupId());
+            mavenData.put("version", coordinate.getVersion());
+            mavenData.put("packaging", coordinate.getPackaging());
+
+            data.put("maven", mavenData);
+        } else {
+            name = identifiedArchiveModel.getFileName();
+        }
+
+        GraphNode graphNode = new GraphNode(
+                name,
+                data,
+                GraphNode.Type.KnownLibrary.name()
+        );
+
+        ProjectModel projectModel = identifiedArchiveModel.getProjectModel();
+
+        if (projectModel instanceof DuplicateProjectModel) {
+            projectModel = ((DuplicateProjectModel) projectModel).getCanonicalProject();
+        }
+
+        projectsMap.put(projectModel, graphNode);
     }
 
     protected GraphNode addChilds(ProjectModel parentNode, Map<ProjectModel, GraphNode> projectsMap, Set<GraphEdge> edges) {
