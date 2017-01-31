@@ -30,8 +30,7 @@ import java.util.HashSet;
  * @author <a href="mailto:jesse.sightler@gmail.com">Jesse Sightler</a>
  * @author <a href="http://ondra.zizka.cz">Ondrej Zizka, zizka at seznam.cz</a>
  */
-public abstract class AbstractGraphResource implements FurnaceRESTGraphAPI
-{
+public abstract class AbstractGraphResource implements FurnaceRESTGraphAPI {
     protected ReportFilterService reportFilterService;
     private UriInfo uri;
     @Inject
@@ -39,41 +38,34 @@ public abstract class AbstractGraphResource implements FurnaceRESTGraphAPI
     private GraphPathLookup graphPathLookup;
 
     @Override
-    public void setUriInfo(UriInfo uriInfo)
-    {
+    public void setUriInfo(UriInfo uriInfo) {
         this.uri = uriInfo;
     }
 
     @Override
-    public void setGraphPathLookup(GraphPathLookup graphPathLookup)
-    {
+    public void setGraphPathLookup(GraphPathLookup graphPathLookup) {
         this.graphPathLookup = graphPathLookup;
     }
 
     @Override
-    public void setReportFilterService(ReportFilterService reportFilterService)
-    {
+    public void setReportFilterService(ReportFilterService reportFilterService) {
         this.reportFilterService = reportFilterService;
     }
 
-    private String getLink(long executionID, Vertex vertex, String direction, String label)
-    {
+    private String getLink(long executionID, Vertex vertex, String direction, String label) {
         String params = String.format("/%s/edges/%s/%s/%s", executionID, vertex.getId(), direction, label);
         return uri.getBaseUri() + GraphResource.GRAPH_RESOURCE_URL + params;
     }
 
-    protected Map<String, Object> convertToMap(long executionID, Vertex vertex, Integer depth, boolean dedup)
-    {
+    protected Map<String, Object> convertToMap(long executionID, Vertex vertex, Integer depth, boolean dedup) {
         return convertToMap(executionID, vertex, depth, dedup, Collections.emptyList(), Collections.emptyList());
     }
 
-    protected Map<String, Object> convertToMap(long executionID, Vertex vertex, Integer depth, boolean dedup, List<String> whitelistedOutEdges, List<String> whitelistedInLabels)
-    {
+    protected Map<String, Object> convertToMap(long executionID, Vertex vertex, Integer depth, boolean dedup, List<String> whitelistedOutEdges, List<String> whitelistedInLabels) {
         return convertToMap(new GraphMarshallingContext(executionID, vertex, depth, dedup, whitelistedOutEdges, whitelistedInLabels, true), vertex);
     }
 
-    protected Map<String, Object> convertToMap(GraphMarshallingContext ctx, Vertex vertex)
-    {
+    protected Map<String, Object> convertToMap(GraphMarshallingContext ctx, Vertex vertex) {
         Map<String, Object> result = new HashMap<>();
 
         result.put(GraphResource.TYPE, GraphResource.TYPE_VERTEX);
@@ -83,8 +75,7 @@ public abstract class AbstractGraphResource implements FurnaceRESTGraphAPI
         if (ctx.deduplicateVertices && !ctx.addVisited(vertex))
             return result;
 
-        for (String key : vertex.getPropertyKeys())
-        {
+        for (String key : vertex.getPropertyKeys()) {
             result.put(key, vertex.getProperty(key));
         }
 
@@ -93,11 +84,22 @@ public abstract class AbstractGraphResource implements FurnaceRESTGraphAPI
         result.put(GraphResource.VERTICES_OUT, outVertices);
         addEdges(ctx, vertex, Direction.OUT, outVertices);
 
-        if (ctx.includeInVertices)
-        {
+        if (ctx.includeInVertices) {
             Map<String, Object> inVertices = new HashMap<>();
             result.put(GraphResource.VERTICES_IN, inVertices);
             addEdges(ctx, vertex, Direction.IN, inVertices);
+        }
+
+        return result;
+    }
+
+    protected Map<String, Object> getVertexPropertiesAsMap(Vertex vertex)
+    {
+        Map<String, Object> result = new HashMap<>();
+
+        for (String key : vertex.getPropertyKeys())
+        {
+            result.put(key, vertex.getProperty(key));
         }
 
         return result;

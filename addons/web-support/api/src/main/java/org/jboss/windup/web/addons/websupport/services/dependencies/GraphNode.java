@@ -14,7 +14,8 @@ public class GraphNode
     public enum Type
     {
         Application,
-        Dependency
+        Dependency,
+        KnownLibrary
     }
 
     protected Long id;
