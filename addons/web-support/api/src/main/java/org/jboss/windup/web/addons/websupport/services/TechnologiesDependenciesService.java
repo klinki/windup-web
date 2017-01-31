@@ -14,4 +14,6 @@ public interface TechnologiesDependenciesService
     Object getDataSourceDependencies();
 
     Object getWSDependencies();
+
+    Object getDependencies();
 }
