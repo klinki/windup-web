@@ -85,7 +85,7 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
         GraphContext graphContext = this.getGraph(executionId);
         this.dependenciesService.setGraphContext(graphContext);
 
-        return this.dependenciesService.getJMQDependencies();
+        return this.dependenciesService.getDependencies();
     }
 
     protected GraphNode addChilds(ProjectModel parentNode, Map<ProjectModel, GraphNode> projectsMap, Set<GraphEdge> edges) {

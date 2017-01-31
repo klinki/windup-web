@@ -9,6 +9,7 @@ import org.jboss.windup.graph.GraphContext;
 import org.jboss.windup.graph.model.DuplicateProjectModel;
 import org.jboss.windup.graph.model.ProjectModel;
 import org.jboss.windup.graph.model.resource.FileModel;
+import org.jboss.windup.rules.apps.java.model.JavaClassModel;
 import org.jboss.windup.rules.apps.javaee.model.EjbMessageDrivenModel;
 import org.jboss.windup.rules.apps.javaee.model.JNDIResourceModel;
 import org.jboss.windup.rules.apps.javaee.model.JaxRSWebServiceModel;
@@ -26,6 +27,10 @@ public class TechnologiesDependenciesServiceImpl implements TechnologiesDependen
     private GraphContext graphContext;
 
     private Map<ProjectModel, GraphNode> projectModels = new HashMap<>();
+
+    private Set<GraphNode> graphNodes = new HashSet<>();
+
+    private Set<GraphEdge> graphEdges = new HashSet<>();
 
     public void setGraphContext(GraphContext context)
     {
@@ -54,6 +59,7 @@ public class TechnologiesDependenciesServiceImpl implements TechnologiesDependen
             GraphNode graphNode = new GraphNode(projectModel.getName(), data, "Application");
 
             this.projectModels.put(projectModel, graphNode);
+            this.graphNodes.add(graphNode);
         }
 
         return this.projectModels.get(projectModel);
@@ -86,16 +92,17 @@ public class TechnologiesDependenciesServiceImpl implements TechnologiesDependen
 
 
             GraphNode mqGraphNode = new GraphNode(destinationName, null, destinationTypeName);
+            this.graphNodes.add(mqGraphNode);
 
             graphNodes.put(destinationName, mqGraphNode);
 
             for (ProjectModel projectModel : messageDrivenModel.getApplications())
             {
-
                 GraphNode projectGraphNode = this.getOrCreateProjectModelGraphNode(projectModel);
                 GraphEdge edge = new GraphEdge(projectGraphNode.getId(), mqGraphNode.getId(), "uses");
 
                 edges.add(edge);
+                this.graphEdges.add(edge);
             }
 
             targets.put(destinationName, destinationModel);
@@ -121,6 +128,7 @@ public class TechnologiesDependenciesServiceImpl implements TechnologiesDependen
                 // todo: distinguish topic/queue
                 mqGraphNode = new GraphNode(location, null, "jmq");
                 graphNodes.put(location, mqGraphNode);
+                this.graphNodes.add(mqGraphNode);
             }
 
             mqGraphNode = graphNodes.get(location);
@@ -131,6 +139,7 @@ public class TechnologiesDependenciesServiceImpl implements TechnologiesDependen
                 GraphEdge edge = new GraphEdge(projectGraphNode.getId(), mqGraphNode.getId(), "exposes");
 
                 edges.add(edge);
+                this.graphEdges.add(edge);
             }
 
             sources.put(location, resource);
@@ -156,14 +165,56 @@ public class TechnologiesDependenciesServiceImpl implements TechnologiesDependen
 
         for (JaxRSWebServiceModel webServiceModel : rsWebServiceModels)
         {
+            JavaClassModel wsInterface = webServiceModel.getInterface();
+
+            for (ProjectModel rootProjectModel : webServiceModel.getRootProjectModels()) {
+                GraphNode projectModelNode = this.getOrCreateProjectModelGraphNode(rootProjectModel);
+                GraphNode wsNode = new GraphNode("Web Service", null, "Web Service");
+                GraphEdge edge = new GraphEdge(projectModelNode.getId(), wsNode.getId(), "exposes");
+
+
+                this.graphNodes.add(wsNode);
+                this.graphNodes.add(projectModelNode);
+                this.graphEdges.add(edge);
+            }
+
             sources.put(webServiceModel.getPath(), webServiceModel);
         }
 
         for (JaxWSWebServiceModel webServiceModel : wsWebServiceModels)
         {
+            JavaClassModel wsInterface = webServiceModel.getInterface();
+
+            for (ProjectModel rootProjectModel : webServiceModel.getRootProjectModels()) {
+                GraphNode projectModelNode = this.getOrCreateProjectModelGraphNode(rootProjectModel);
+                GraphNode wsNode = new GraphNode("Web Service", null, "Web Service");
+                GraphEdge edge = new GraphEdge(projectModelNode.getId(), wsNode.getId(), "exposes");
+
+
+                this.graphNodes.add(wsNode);
+                this.graphNodes.add(projectModelNode);
+                this.graphEdges.add(edge);
+            }
+
             sources.put(webServiceModel.toPrettyString(), webServiceModel);
         }
 
         return null;
+    }
+
+
+    @Override
+    public Object getDependencies()
+    {
+        this.getJMQDependencies();
+        this.getDataSourceDependencies();
+        this.getWSDependencies();
+
+        Map<String, Object> dependenciesMap = new HashMap<>();
+
+        dependenciesMap.put("nodes", this.graphNodes);
+        dependenciesMap.put("edges", this.graphEdges);
+
+        return dependenciesMap;
     }
 }
