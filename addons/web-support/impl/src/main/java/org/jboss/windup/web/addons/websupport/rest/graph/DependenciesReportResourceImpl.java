@@ -1,8 +1,12 @@
 package org.jboss.windup.web.addons.websupport.rest.graph;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.jboss.windup.graph.GraphContext;
+import org.jboss.windup.web.addons.websupport.services.dependencies.DependenciesData;
 import org.jboss.windup.web.addons.websupport.services.dependencies.LibraryDependenciesService;
 import org.jboss.windup.web.addons.websupport.services.dependencies.TechnologiesDependenciesService;
 
@@ -23,14 +27,34 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
         GraphContext graphContext = this.getGraph(executionId);
         this.libraryDependenciesService.setGraphContext(graphContext);
 
-        return this.libraryDependenciesService.getDependencies();
+        return this.getResult(this.libraryDependenciesService.getDependencies());
     }
 
     @Override
-    public Object getTechnologiesDependencies(Long executionId) {
+    public Object getTechnologiesDependencies(Long executionId)
+    {
         GraphContext graphContext = this.getGraph(executionId);
         this.dependenciesService.setGraphContext(graphContext);
 
         return this.dependenciesService.getDependencies();
+    }
+
+    /**
+     * This method exists because JAX-RS was returning some metadata which were not supposed to be there.
+     * It might be something related to DI container, class loading or whatever.
+     * It was returning handler, delegate and initialCallingLoader.
+     * And also throwing com.fasterxml.jackson.databind.JsonMappingException: Direct self-reference leading to cycle
+     *
+     * @param dependenciesData Dependencies data object
+     * @return Result map
+     */
+    protected Map<String, Object> getResult(DependenciesData dependenciesData)
+    {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        resultMap.put("nodes", dependenciesData.getNodes());
+        resultMap.put("edges", dependenciesData.getEdges());
+
+        return resultMap;
     }
 }
