@@ -14,6 +14,8 @@ import org.jboss.windup.graph.model.resource.FileModel;
 import org.jboss.windup.graph.service.WindupConfigurationService;
 import org.jboss.windup.rules.apps.java.archives.model.ArchiveCoordinateModel;
 import org.jboss.windup.rules.apps.java.archives.model.IdentifiedArchiveModel;
+import org.jboss.windup.web.addons.websupport.services.dependencies.GraphEdge;
+import org.jboss.windup.web.addons.websupport.services.dependencies.GraphNode;
 
 /**
  * @author <a href="mailto:dklingenberg@gmail.com">David Klingenberg</a>
@@ -55,7 +57,12 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
                 continue;
             }
 
-            GraphNode projectGraphNode = new GraphNode(rootProjectModel.getName(), rootProjectModel, GraphNode.Type.Application);
+            GraphNode projectGraphNode = new GraphNode(
+                    rootProjectModel.getName(),
+                    this.getData(rootProjectModel),
+                    GraphNode.Type.Application.name()
+            );
+
             projectModelGraphNodeHashMap.put(rootProjectModel, projectGraphNode);
 
             this.addChilds(rootProjectModel, projectModelGraphNodeHashMap, edges);
@@ -124,7 +131,7 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
         GraphNode parentGraphNode;
 
         if (!projectsMap.containsKey(parentNode)) {
-            parentGraphNode = new GraphNode(parentNode.getName(), parentNode, GraphNode.Type.Dependency);
+            parentGraphNode = new GraphNode(parentNode.getName(), this.getData(parentNode), GraphNode.Type.Dependency.name());
             projectsMap.put(parentNode, parentGraphNode);
         }
 
@@ -143,103 +150,24 @@ public class DependenciesReportResourceImpl extends AbstractGraphResource implem
         return parentGraphNode;
     }
 
-    public static class GraphNode
+
+    protected Map<String, Object> getData(Object model)
     {
-        public enum Type
+        Map<String, Object> data = new HashMap<>();
+
+        if (model instanceof ProjectModel)
         {
-            Application,
-            Dependency
-        }
+            ProjectModel projectModel = (ProjectModel) model;
 
-        protected Long id;
-        protected String name;
-        protected Object data;
-        protected Type type;
+            FileModel rootFileModel = projectModel.getRootFileModel();
 
-        protected static long countInstances = 0;
-
-        public GraphNode(String name, Object data, GraphNode.Type type)
-        {
-            this.id = ++GraphNode.countInstances;
-            this.name = name;
-            this.data = data;
-            this.type = type;
-        }
-
-        public Long getId()
-        {
-            return id;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public Object getData()
-        {
-            Map<String, Object> data = new HashMap<>();
-
-            if (this.data instanceof ProjectModel) {
-                ProjectModel projectModel = (ProjectModel)this.data;
-
-                FileModel rootFileModel = projectModel.getRootFileModel();
-
-                if (rootFileModel != null) {
-                    data.put("filePath", rootFileModel.getFilePath());
-                    data.put("fileName", rootFileModel.getFileName());
-                }
+            if (rootFileModel != null)
+            {
+                data.put("filePath", rootFileModel.getFilePath());
+                data.put("fileName", rootFileModel.getFileName());
             }
-
-            return data;
         }
 
-        public Type getType()
-        {
-            return type;
-        }
-    }
-
-    public static class GraphEdge
-    {
-        protected Long from;
-        protected Long to;
-
-        public GraphEdge(Long from, Long to)
-        {
-            this.from = from;
-            this.to = to;
-        }
-
-        public Long getFrom()
-        {
-            return from;
-        }
-
-        public Long getTo()
-        {
-            return to;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            GraphEdge graphEdge = (GraphEdge) o;
-
-            if (from != null ? !from.equals(graphEdge.from) : graphEdge.from != null)
-                return false;
-
-            return to != null ? to.equals(graphEdge.to) : graphEdge.to == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = from != null ? from.hashCode() : 0;
-            result = 31 * result + (to != null ? to.hashCode() : 0);
-
-            return result;
-        }
+        return data;
     }
 }
