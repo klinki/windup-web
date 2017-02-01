@@ -1,4 +1,4 @@
-package org.jboss.windup.web.addons.websupport.services;
+package org.jboss.windup.web.addons.websupport.services.dependencies;
 
 import org.jboss.windup.graph.GraphContext;
 

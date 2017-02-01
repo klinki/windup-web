@@ -18,6 +18,7 @@ import org.jboss.windup.rules.apps.javaee.model.JmsDestinationModel;
 import org.jboss.windup.rules.apps.javaee.model.JmsDestinationType;
 import org.jboss.windup.web.addons.websupport.services.dependencies.GraphEdge;
 import org.jboss.windup.web.addons.websupport.services.dependencies.GraphNode;
+import org.jboss.windup.web.addons.websupport.services.dependencies.TechnologiesDependenciesService;
 
 /**
  * @author <a href="mailto:dklingenberg@gmail.com">David Klingenberg</a>
