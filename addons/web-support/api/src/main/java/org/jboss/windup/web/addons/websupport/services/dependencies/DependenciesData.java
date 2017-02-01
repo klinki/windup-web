@@ -1,5 +1,6 @@
 package org.jboss.windup.web.addons.websupport.services.dependencies;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,12 @@ public class DependenciesData
         this.nodes = new HashSet<>();
     }
 
+    public DependenciesData(Collection<GraphNode> nodes, Collection<GraphEdge> edges)
+    {
+        this.edges = new HashSet<>(edges);
+        this.nodes = new HashSet<>(nodes);
+    }
+
     public Set<GraphEdge> getEdges()
     {
         return edges;
@@ -27,11 +34,9 @@ public class DependenciesData
         this.edges = edges;
     }
 
-    public DependenciesData addEdge(GraphEdge edge)
+    public void addEdge(GraphEdge edge)
     {
         this.edges.add(edge);
-
-        return this;
     }
 
     public Set<GraphNode> getNodes()
@@ -44,10 +49,8 @@ public class DependenciesData
         this.nodes = nodes;
     }
 
-    public DependenciesData addNode(GraphNode node)
+    public void addNode(GraphNode node)
     {
         this.nodes.add(node);
-
-        return this;
     }
 }
