@@ -66,8 +66,6 @@ import {RouteLinkProviderService} from "./core/routing/route-link-provider-servi
 import {ConfigurationResolve} from "./configuration/configuration.resolve";
 import {ProjectResolve} from "./project/project.resolve";
 import {ApplicationResolve} from "./registered-application/application.resolve";
-import {BreadCrumbsComponent as BreadCrumbsNavigationComponent} from "./shared/navigation/breadcrumbs.component";
-import {BreadCrumbsService} from "./shared/navigation/breadcrumbs.service";
 import {RouteFlattenerService} from "./core/routing/route-flattener.service";
 import {ExecutionsListComponent} from "./executions/executions-list.component";
 import {AllExecutionsComponent} from "./executions/all-executions.component";
@@ -115,6 +113,14 @@ import {SortIndicatorComponent} from "./shared/sort/sort-indicator.component";
 import {SortableTableComponent} from "./shared/sort/sortable-table.component";
 import {StatusIconComponent} from "./shared/status-icon.component";
 import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.service";
+import {CoreModule} from "./core/core.module";
+import {SharedModule} from "./shared/shared.module";
+import {ProjectModule} from "./project/project.module";
+import {GroupModule} from "./group/group.module";
+import {ReportsModule} from "./reports/reports.module";
+import {ApplicationModule} from "./registered-application/registered-application.module";
+import {ConfigurationModule} from "./configuration/configuration.module";
+import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -136,7 +142,16 @@ initializeModelMappingData();
         ChosenModule,
 
         // Moment
-        MomentModule
+        MomentModule,
+
+        CoreModule,
+        SharedModule,
+        ProjectModule,
+        GroupModule,
+        ReportsModule,
+        ApplicationModule,
+        ConfigurationModule,
+        AnalysisContextModule
     ],
     declarations: [
         // pages
@@ -189,12 +204,10 @@ initializeModelMappingData();
         ContextMenuComponent,
         GroupLayoutComponent,
         DefaultLayoutComponent,
-        BreadCrumbsNavigationComponent,
         DefaultLayoutComponent,
         ExecutionsListComponent,
         AllExecutionsComponent,
         GroupExecutionsComponent,
-        BreadCrumbsNavigationComponent,
         ReportFilterComponent,
         CustomSelectComponent,
         ReportFilterIndicatorComponent,
@@ -255,12 +268,6 @@ initializeModelMappingData();
         {
             provide: RouteLinkProviderService,
             useFactory: createRouteLinkProviderService
-        },
-        BreadCrumbsService,
-        {
-            provide: Http,
-            useFactory: breadcrumbsServiceFactory,
-            deps: [XHRBackend, RequestOptions, KeycloakService]
         },
         {
             provide: FileUploader,
