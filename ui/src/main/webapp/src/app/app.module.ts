@@ -8,17 +8,14 @@ import { AppComponent }  from './components/app.component';
 import {routing, appRoutingProviders} from './app.routing';
 
 import {ProjectListComponent} from "./project/project-list.component";
-import {AnalysisContextFormComponent} from "./analysis-context/analysis-context-form.component";
 import {ApplicationGroupForm} from "./group/application-group-form.component";
 import {GroupListComponent} from "./group/group-list.component";
 import {MigrationProjectFormComponent} from "./project/migration-project-form.component";
 import {GroupPageComponent} from "./group/group.page.component";
 import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
 import {ConfigurationService} from "./configuration/configuration.service";
-import {AnalysisContextService} from "./analysis-context/analysis-context.service";
 import {ApplicationGroupService} from "./group/application-group.service";
 import {FileService} from "./services/file.service";
-import {MigrationPathService} from "./analysis-context/migration-path.service";
 import {MigrationProjectService} from "./project/migration-project.service";
 import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
@@ -27,13 +24,10 @@ import {ConfigurationComponent} from "./configuration/configuration.component";
 import {TechnologyComponent} from "./configuration/technology.component";
 import {RulesModalComponent} from "./configuration/rules-modal.component";
 import {AddRulesPathModalComponent} from "./configuration/add-rules-path-modal.component";
-import {CustomRuleSelectionComponent} from "./analysis-context/custom-rule-selection.component";
 import {LoginComponent} from "./components/login.component";
 import {GroupLayoutComponent} from "./group/group-layout.component";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
-import {AnalysisContextAdvancedOptionsModalComponent} from "./analysis-context/analysis-context-advanced-options-modal.component";
 import {ConfigurationOptionsService} from "./configuration/configuration-options.service";
-import {PackageRegistryService} from "./analysis-context/package-registry.service";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
 import {ApplicationGroupResolve} from "./group/application-group.resolve";
 import {ConfigurationResolve} from "./configuration/configuration.resolve";
@@ -54,6 +48,7 @@ import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.serv
 import {SharedModule} from "./shared/shared.module";
 import {CoreModule} from "./core/core.module";
 import {ReportsModule} from "./reports/reports.module";
+import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -68,13 +63,13 @@ initializeModelMappingData();
 
         SharedModule,
         CoreModule,
-        ReportsModule
+        ReportsModule,
+        AnalysisContextModule
     ],
     declarations: [
         // pages
         AppComponent,
         LoginComponent,
-        AnalysisContextFormComponent,
         ApplicationGroupForm,
         ConfigurationComponent,
         GroupListComponent,
@@ -88,11 +83,9 @@ initializeModelMappingData();
 
         // Components
         AddRulesPathModalComponent,
-        AnalysisContextAdvancedOptionsModalComponent,
         RulesModalComponent,
         TechnologyComponent,
 
-        CustomRuleSelectionComponent,
         ExecutionsListComponent,
         AllExecutionsComponent,
         GroupExecutionsComponent,
@@ -101,17 +94,14 @@ initializeModelMappingData();
     ],
     providers: [
         appRoutingProviders,
-        AnalysisContextService,
         ApplicationGroupService,
         ConfigurationService,
         ConfigurationOptionsService,
         FileService,
-        MigrationPathService,
         MigrationProjectService,
         RegisteredApplicationService,
         RuleService,
         WindupService,
-        PackageRegistryService,
         FileModelService,
         ClassificationService,
         HintService,
