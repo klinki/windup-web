@@ -13,24 +13,15 @@ import {GroupListComponent} from "./group/group-list.component";
 import {MigrationProjectFormComponent} from "./project/migration-project-form.component";
 import {GroupPageComponent} from "./group/group.page.component";
 import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
-import {ConfigurationService} from "./configuration/configuration.service";
 import {ApplicationGroupService} from "./group/application-group.service";
 import {FileService} from "./services/file.service";
 import {MigrationProjectService} from "./project/migration-project.service";
 import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
-import {RuleService} from "./configuration/rule.service";
-import {ConfigurationComponent} from "./configuration/configuration.component";
-import {TechnologyComponent} from "./configuration/technology.component";
-import {RulesModalComponent} from "./configuration/rules-modal.component";
-import {AddRulesPathModalComponent} from "./configuration/add-rules-path-modal.component";
-import {LoginComponent} from "./components/login.component";
-import {GroupLayoutComponent} from "./group/group-layout.component";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
-import {ConfigurationOptionsService} from "./configuration/configuration-options.service";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
 import {ApplicationGroupResolve} from "./group/application-group.resolve";
-import {ConfigurationResolve} from "./configuration/configuration.resolve";
+import {GroupLayoutComponent} from "./group/group-layout.component";
 import {ProjectResolve} from "./project/project.resolve";
 import {ApplicationResolve} from "./registered-application/application.resolve";
 import {ExecutionsListComponent} from "./executions/executions-list.component";
@@ -45,10 +36,12 @@ import {initializeModelMappingData} from "./generated/tsModels/discriminator-map
 import {NoProjectsWelcomeComponent} from "./project/no-projects-welcome.component";
 import {ExecutionDetailComponent} from "./executions/execution-detail.component";
 import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.service";
+import {LoginComponent} from "./components/login.component";
 import {SharedModule} from "./shared/shared.module";
 import {CoreModule} from "./core/core.module";
 import {ReportsModule} from "./reports/reports.module";
 import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
+import {ConfigurationModule} from "./configuration/configuration.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -64,14 +57,14 @@ initializeModelMappingData();
         SharedModule,
         CoreModule,
         ReportsModule,
-        AnalysisContextModule
+        AnalysisContextModule,
+        ConfigurationModule
     ],
     declarations: [
         // pages
         AppComponent,
         LoginComponent,
         ApplicationGroupForm,
-        ConfigurationComponent,
         GroupListComponent,
         GroupPageComponent,
         GroupLayoutComponent,
@@ -80,11 +73,6 @@ initializeModelMappingData();
         NoProjectsWelcomeComponent,
         RegisterApplicationFormComponent,
         EditApplicationFormComponent,
-
-        // Components
-        AddRulesPathModalComponent,
-        RulesModalComponent,
-        TechnologyComponent,
 
         ExecutionsListComponent,
         AllExecutionsComponent,
@@ -95,19 +83,15 @@ initializeModelMappingData();
     providers: [
         appRoutingProviders,
         ApplicationGroupService,
-        ConfigurationService,
-        ConfigurationOptionsService,
         FileService,
         MigrationProjectService,
         RegisteredApplicationService,
-        RuleService,
         WindupService,
         FileModelService,
         ClassificationService,
         HintService,
         FramesRestClientService,
         ApplicationGroupResolve,
-        ConfigurationResolve,
         ProjectResolve,
         ApplicationResolve,
         WindupExecutionService,
