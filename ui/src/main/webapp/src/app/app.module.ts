@@ -8,13 +8,13 @@ import { AppComponent }  from './components/app.component';
 import {routing, appRoutingProviders} from './app.routing';
 
 import {ProjectListComponent} from "./project/project-list.component";
-import {AnalysisContextFormComponent} from "./analysis-context/analysis-context-form.component";
+import {ApplicationGroupForm} from "./group/application-group-form.component";
+import {GroupListComponent} from "./group/group-list.component";
 import {MigrationProjectFormComponent} from "./project/migration-project-form.component";
 import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
 import {ConfigurationService} from "./configuration/configuration.service";
-import {AnalysisContextService} from "./analysis-context/analysis-context.service";
+import {ApplicationGroupService} from "./group/application-group.service";
 import {FileService} from "./services/file.service";
-import {MigrationPathService} from "./analysis-context/migration-path.service";
 import {MigrationProjectService} from "./project/migration-project.service";
 import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
@@ -23,12 +23,9 @@ import {ConfigurationComponent} from "./configuration/configuration.component";
 import {TechnologyComponent} from "./configuration/technology.component";
 import {RulesModalComponent} from "./configuration/rules-modal.component";
 import {AddRulesPathModalComponent} from "./configuration/add-rules-path-modal.component";
-import {CustomRuleSelectionComponent} from "./analysis-context/custom-rule-selection.component";
 import {ProjectLayoutComponent} from "./project/project-layout.component";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
-import {AnalysisContextAdvancedOptionsModalComponent} from "./analysis-context/analysis-context-advanced-options-modal.component";
 import {ConfigurationOptionsService} from "./configuration/configuration-options.service";
-import {PackageRegistryService} from "./analysis-context/package-registry.service";
 import {LoginComponent} from "./components/login.component";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
 import {ProjectLayoutComponent} from "./project/project-layout.component";
@@ -54,6 +51,7 @@ import {ProjectExecutionsComponent} from "./executions/project-executions.compon
 import {CoreModule} from "./core/core.module";
 import {SharedModule} from "./shared/shared.module";
 import {ReportsModule} from "./reports/reports.module";
+import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -68,13 +66,13 @@ initializeModelMappingData();
 
         SharedModule,
         CoreModule,
-        ReportsModule
+        ReportsModule,
+        AnalysisContextModule
     ],
     declarations: [
         // pages
         AppComponent,
         LoginComponent,
-        AnalysisContextFormComponent,
         ConfigurationComponent,
         MigrationProjectFormComponent,
         ProjectListComponent,
@@ -84,12 +82,9 @@ initializeModelMappingData();
 
         // Components
         AddRulesPathModalComponent,
-        AnalysisContextAdvancedOptionsModalComponent,
         RulesModalComponent,
         TechnologyComponent,
 
-        CustomRuleSelectionComponent,
-        LoginComponent,
         ProjectLayoutComponent,
         ExecutionsLayoutComponent,
         DefaultLayoutComponent,
@@ -108,16 +103,13 @@ initializeModelMappingData();
     ],
     providers: [
         appRoutingProviders,
-        AnalysisContextService,
         ConfigurationService,
         ConfigurationOptionsService,
         FileService,
-        MigrationPathService,
         MigrationProjectService,
         RegisteredApplicationService,
         RuleService,
         WindupService,
-        PackageRegistryService,
         FileModelService,
         ClassificationService,
         HintService,
