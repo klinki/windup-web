@@ -1,11 +1,11 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RequestOptions, XHRBackend, Http } from '@angular/http';
+import { Http } from '@angular/http';
 
 import 'rxjs/Rx';
 
 import { AppComponent }  from './components/app.component';
-import {routing, appRoutingProviders, appRoutes} from './app.routing';
+import {routing, appRoutingProviders} from './app.routing';
 
 import {ProjectListComponent} from "./project/project-list.component";
 import {AnalysisContextFormComponent} from "./analysis-context/analysis-context-form.component";
@@ -29,16 +29,12 @@ import {RulesModalComponent} from "./configuration/rules-modal.component";
 import {AddRulesPathModalComponent} from "./configuration/add-rules-path-modal.component";
 import {CustomRuleSelectionComponent} from "./analysis-context/custom-rule-selection.component";
 import {GroupLayoutComponent} from "./group/group-layout.component";
-import {KeycloakService} from "./core/authentication/keycloak.service";
-import {WindupHttpService} from "./core/authentication/windup.http.service";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
 import {AnalysisContextAdvancedOptionsModalComponent} from "./analysis-context/analysis-context-advanced-options-modal.component";
 import {ConfigurationOptionsService} from "./configuration/configuration-options.service";
-import {NotificationService} from "./core/notification/notification.service";
 import {PackageRegistryService} from "./analysis-context/package-registry.service";
 import {TechnologiesReportComponent} from "./reports/technologies/technologies-report.component";
 import {LoginComponent} from "./components/login.component";
-import {LoggedInGuard} from "./core/authentication/logged-in.guard";
 import {MigrationIssuesComponent} from "./reports/migration-issues/migration-issues.component";
 import {MigrationIssuesTableComponent} from "./reports/migration-issues/migration-issues-table.component";
 import {MigrationIssuesService} from "./reports/migration-issues/migration-issues.service";
@@ -47,11 +43,9 @@ import {DependenciesReportComponent} from "./reports/dependencies/dependencies-r
 import {DependenciesService} from "./reports/dependencies/dependencies.service";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
 import {ApplicationGroupResolve} from "./group/application-group.resolve";
-import {RouteLinkProviderService} from "./core/routing/route-link-provider-service";
 import {ConfigurationResolve} from "./configuration/configuration.resolve";
 import {ProjectResolve} from "./project/project.resolve";
 import {ApplicationResolve} from "./registered-application/application.resolve";
-import {RouteFlattenerService} from "./core/routing/route-flattener.service";
 import {ExecutionsListComponent} from "./executions/executions-list.component";
 import {AllExecutionsComponent} from "./executions/all-executions.component";
 import {GroupExecutionsComponent} from "./executions/group-executions.component";
@@ -69,19 +63,18 @@ import {AggregatedStatisticsService} from "./reports/application-index/aggregate
 import {ApplicationDetailsService} from "./reports/application-details/application-details.service";
 import {TechnologyTagComponent} from "./reports/technology-tag/technology-tag.component";
 import {PrettyPathPipe} from "./reports/pretty-path.pipe";
-import {EventBusService} from "./core/events/event-bus.service";
 import {WindupExecutionService} from "./services/windup-execution.service";
 import {ActiveExecutionsProgressbarComponent} from "./executions/active-executions-progressbar.component";
 import {TagDataService} from "./reports/tag-data.service";
 import {RuleProviderExecutionsService} from "./reports/rule-provider-executions/rule-provider-executions.service";
 import {RuleProviderExecutionsComponent} from "./reports/rule-provider-executions/rule-provider-executions.component";
 import {initializeModelMappingData} from "./generated/tsModels/discriminator-mapping-data";
-import {RouteHistoryService} from "./core/routing/route-history.service";
 import {DependenciesGraphComponent} from "./reports/dependencies/dependencies-graph.component";
 import {NoProjectsWelcomeComponent} from "./project/no-projects-welcome.component";
 import {ExecutionDetailComponent} from "./executions/execution-detail.component";
 import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.service";
 import {SharedModule} from "./shared/shared.module";
+import {CoreModule} from "./core/core.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -94,7 +87,8 @@ initializeModelMappingData();
 
         routing,
 
-        SharedModule
+        SharedModule,
+        CoreModule
     ],
     declarations: [
         // pages
@@ -132,7 +126,6 @@ initializeModelMappingData();
         LoginComponent,
         MigrationIssuesComponent,
         MigrationIssuesTableComponent,
-        LoginComponent,
         ExecutionsListComponent,
         AllExecutionsComponent,
         GroupExecutionsComponent,
@@ -146,7 +139,6 @@ initializeModelMappingData();
     ],
     providers: [
         appRoutingProviders,
-        KeycloakService,
         AnalysisContextService,
         ApplicationGroupService,
         ConfigurationService,
@@ -157,9 +149,7 @@ initializeModelMappingData();
         RegisteredApplicationService,
         RuleService,
         WindupService,
-        NotificationService,
         PackageRegistryService,
-        LoggedInGuard,
         MigrationIssuesService,
         TechReportService,
         FileModelService,
@@ -171,19 +161,12 @@ initializeModelMappingData();
         ConfigurationResolve,
         ProjectResolve,
         ApplicationResolve,
-        RouteFlattenerService,
         ReportFilterService,
         ReportFilterResolve,
         DependenciesService,
-        EventBusService,
         WindupExecutionService,
         TagDataService,
         RuleProviderExecutionsService,
-        RouteHistoryService,
-        {
-            provide: RouteLinkProviderService,
-            useFactory: createRouteLinkProviderService
-        },
         {
             provide: GraphJSONToModelService,
             useFactory: createGraphJSONToModelService,
@@ -194,16 +177,6 @@ initializeModelMappingData();
     bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
-
-export function createRouteLinkProviderService() {
-        return new RouteLinkProviderService(appRoutes);
-}
-
-export function breadcrumbsServiceFactory(backend: XHRBackend,
-                                          defaultOptions: RequestOptions,
-                                          keycloakService: KeycloakService) {
-    return new WindupHttpService(backend, defaultOptions, keycloakService);
-}
 
 export function createGraphJSONToModelService(http: Http) {
     return new GraphJSONToModelService(http, null);
