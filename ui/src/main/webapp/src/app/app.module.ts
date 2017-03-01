@@ -12,21 +12,14 @@ import {ApplicationGroupForm} from "./group/application-group-form.component";
 import {GroupListComponent} from "./group/group-list.component";
 import {MigrationProjectFormComponent} from "./project/migration-project-form.component";
 import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
-import {ConfigurationService} from "./configuration/configuration.service";
 import {ApplicationGroupService} from "./group/application-group.service";
 import {FileService} from "./services/file.service";
 import {MigrationProjectService} from "./project/migration-project.service";
 import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
-import {RuleService} from "./configuration/rule.service";
-import {ConfigurationComponent} from "./configuration/configuration.component";
-import {TechnologyComponent} from "./configuration/technology.component";
-import {RulesModalComponent} from "./configuration/rules-modal.component";
-import {AddRulesPathModalComponent} from "./configuration/add-rules-path-modal.component";
+import {LoginComponent} from "./components/login.component";
 import {ProjectLayoutComponent} from "./project/project-layout.component";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
-import {ConfigurationOptionsService} from "./configuration/configuration-options.service";
-import {LoginComponent} from "./components/login.component";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
 import {ProjectLayoutComponent} from "./project/project-layout.component";
 import {DefaultLayoutComponent} from "./shared/layout/default-layout.component";
@@ -52,6 +45,7 @@ import {CoreModule} from "./core/core.module";
 import {SharedModule} from "./shared/shared.module";
 import {ReportsModule} from "./reports/reports.module";
 import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
+import {ConfigurationModule} from "./configuration/configuration.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -67,24 +61,19 @@ initializeModelMappingData();
         SharedModule,
         CoreModule,
         ReportsModule,
-        AnalysisContextModule
+        AnalysisContextModule,
+        ConfigurationModule
     ],
     declarations: [
         // pages
         AppComponent,
         LoginComponent,
-        ConfigurationComponent,
         MigrationProjectFormComponent,
         ProjectListComponent,
         NoProjectsWelcomeComponent,
         RegisterApplicationFormComponent,
         EditApplicationFormComponent,
-
-        // Components
-        AddRulesPathModalComponent,
-        RulesModalComponent,
-        TechnologyComponent,
-
+        LoginComponent,
         ProjectLayoutComponent,
         ExecutionsLayoutComponent,
         DefaultLayoutComponent,
@@ -103,18 +92,14 @@ initializeModelMappingData();
     ],
     providers: [
         appRoutingProviders,
-        ConfigurationService,
-        ConfigurationOptionsService,
         FileService,
         MigrationProjectService,
         RegisteredApplicationService,
-        RuleService,
         WindupService,
         FileModelService,
         ClassificationService,
         HintService,
         FramesRestClientService,
-        ConfigurationResolve,
         ProjectResolve,
         ApplicationResolve,
         WindupExecutionService,
