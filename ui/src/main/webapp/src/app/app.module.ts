@@ -28,19 +28,12 @@ import {TechnologyComponent} from "./configuration/technology.component";
 import {RulesModalComponent} from "./configuration/rules-modal.component";
 import {AddRulesPathModalComponent} from "./configuration/add-rules-path-modal.component";
 import {CustomRuleSelectionComponent} from "./analysis-context/custom-rule-selection.component";
+import {LoginComponent} from "./components/login.component";
 import {GroupLayoutComponent} from "./group/group-layout.component";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
 import {AnalysisContextAdvancedOptionsModalComponent} from "./analysis-context/analysis-context-advanced-options-modal.component";
 import {ConfigurationOptionsService} from "./configuration/configuration-options.service";
 import {PackageRegistryService} from "./analysis-context/package-registry.service";
-import {TechnologiesReportComponent} from "./reports/technologies/technologies-report.component";
-import {LoginComponent} from "./components/login.component";
-import {MigrationIssuesComponent} from "./reports/migration-issues/migration-issues.component";
-import {MigrationIssuesTableComponent} from "./reports/migration-issues/migration-issues-table.component";
-import {MigrationIssuesService} from "./reports/migration-issues/migration-issues.service";
-import {TechReportService} from "./reports/technologies/tech-report.service";
-import {DependenciesReportComponent} from "./reports/dependencies/dependencies-report.component";
-import {DependenciesService} from "./reports/dependencies/dependencies.service";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
 import {ApplicationGroupResolve} from "./group/application-group.resolve";
 import {ConfigurationResolve} from "./configuration/configuration.resolve";
@@ -49,32 +42,18 @@ import {ApplicationResolve} from "./registered-application/application.resolve";
 import {ExecutionsListComponent} from "./executions/executions-list.component";
 import {AllExecutionsComponent} from "./executions/all-executions.component";
 import {GroupExecutionsComponent} from "./executions/group-executions.component";
-import {SourceReportComponent} from "./reports/source/source-report.component";
 import {FileModelService} from "./services/graph/file-model.service";
 import {ClassificationService} from "./services/graph/classification.service";
 import {HintService} from "./services/graph/hint.service";
-import {ReportFilterComponent} from "./reports/filter/report-filter.component";
-import {ReportFilterService} from "./reports/filter/report-filter.service";
-import {ReportFilterResolve} from "./reports/filter/report-filter.resolve";
-import {ReportFilterIndicatorComponent} from "./reports/filter/report-filter-indicator.component";
-import {ApplicationDetailsComponent} from "./reports/application-details/application-details.component";
-import {ApplicationIndexComponent} from "./reports/application-index/application-index.component";
-import {AggregatedStatisticsService} from "./reports/application-index/aggregated-statistics.service";
-import {ApplicationDetailsService} from "./reports/application-details/application-details.service";
-import {TechnologyTagComponent} from "./reports/technology-tag/technology-tag.component";
-import {PrettyPathPipe} from "./reports/pretty-path.pipe";
 import {WindupExecutionService} from "./services/windup-execution.service";
 import {ActiveExecutionsProgressbarComponent} from "./executions/active-executions-progressbar.component";
-import {TagDataService} from "./reports/tag-data.service";
-import {RuleProviderExecutionsService} from "./reports/rule-provider-executions/rule-provider-executions.service";
-import {RuleProviderExecutionsComponent} from "./reports/rule-provider-executions/rule-provider-executions.component";
 import {initializeModelMappingData} from "./generated/tsModels/discriminator-mapping-data";
-import {DependenciesGraphComponent} from "./reports/dependencies/dependencies-graph.component";
 import {NoProjectsWelcomeComponent} from "./project/no-projects-welcome.component";
 import {ExecutionDetailComponent} from "./executions/execution-detail.component";
 import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.service";
 import {SharedModule} from "./shared/shared.module";
 import {CoreModule} from "./core/core.module";
+import {ReportsModule} from "./reports/reports.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -88,7 +67,8 @@ initializeModelMappingData();
         routing,
 
         SharedModule,
-        CoreModule
+        CoreModule,
+        ReportsModule
     ],
     declarations: [
         // pages
@@ -106,16 +86,6 @@ initializeModelMappingData();
         RegisterApplicationFormComponent,
         EditApplicationFormComponent,
 
-        // Reports
-        TechnologiesReportComponent,
-        DependenciesReportComponent,
-        SourceReportComponent,
-        ApplicationDetailsComponent,
-        ApplicationIndexComponent,
-        PrettyPathPipe,
-
-        // Report components
-
         // Components
         AddRulesPathModalComponent,
         AnalysisContextAdvancedOptionsModalComponent,
@@ -123,18 +93,10 @@ initializeModelMappingData();
         TechnologyComponent,
 
         CustomRuleSelectionComponent,
-        LoginComponent,
-        MigrationIssuesComponent,
-        MigrationIssuesTableComponent,
         ExecutionsListComponent,
         AllExecutionsComponent,
         GroupExecutionsComponent,
-        ReportFilterComponent,
-        ReportFilterIndicatorComponent,
-        TechnologyTagComponent,
         ActiveExecutionsProgressbarComponent,
-        RuleProviderExecutionsComponent,
-        DependenciesGraphComponent,
         ExecutionDetailComponent
     ],
     providers: [
@@ -150,29 +112,20 @@ initializeModelMappingData();
         RuleService,
         WindupService,
         PackageRegistryService,
-        MigrationIssuesService,
-        TechReportService,
         FileModelService,
         ClassificationService,
         HintService,
-        ApplicationDetailsService,
         FramesRestClientService,
         ApplicationGroupResolve,
         ConfigurationResolve,
         ProjectResolve,
         ApplicationResolve,
-        ReportFilterService,
-        ReportFilterResolve,
-        DependenciesService,
         WindupExecutionService,
-        TagDataService,
-        RuleProviderExecutionsService,
         {
             provide: GraphJSONToModelService,
             useFactory: createGraphJSONToModelService,
             deps: [Http]
         },
-        AggregatedStatisticsService
     ],
     bootstrap:    [ AppComponent ]
 })
