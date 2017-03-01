@@ -1,7 +1,6 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule, RequestOptions, XHRBackend, Http } from '@angular/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RequestOptions, XHRBackend, Http } from '@angular/http';
 
 import 'rxjs/Rx';
 
@@ -15,9 +14,6 @@ import {GroupListComponent} from "./group/group-list.component";
 import {MigrationProjectFormComponent} from "./project/migration-project-form.component";
 import {GroupPageComponent} from "./group/group.page.component";
 import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
-import {ProgressBarComponent} from "./shared/progress-bar.component";
-import {NavbarComponent} from "./shared/navigation/navbar.component";
-import {BreadCrumbsComponent} from "./shared/navigation/breadcrumbs.component";
 import {ConfigurationService} from "./configuration/configuration.service";
 import {AnalysisContextService} from "./analysis-context/analysis-context.service";
 import {ApplicationGroupService} from "./group/application-group.service";
@@ -31,22 +27,14 @@ import {ConfigurationComponent} from "./configuration/configuration.component";
 import {TechnologyComponent} from "./configuration/technology.component";
 import {RulesModalComponent} from "./configuration/rules-modal.component";
 import {AddRulesPathModalComponent} from "./configuration/add-rules-path-modal.component";
-import {ConfirmationModalComponent} from "./shared/confirmation-modal.component";
 import {CustomRuleSelectionComponent} from "./analysis-context/custom-rule-selection.component";
-
+import {GroupLayoutComponent} from "./group/group-layout.component";
 import {KeycloakService} from "./core/authentication/keycloak.service";
 import {WindupHttpService} from "./core/authentication/windup.http.service";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
-import {UploadQueueComponent} from "./shared/upload/upload-queue.component";
-import {UploadProgressbarComponent} from "./shared/upload/upload-progressbar.component";
 import {AnalysisContextAdvancedOptionsModalComponent} from "./analysis-context/analysis-context-advanced-options-modal.component";
 import {ConfigurationOptionsService} from "./configuration/configuration-options.service";
-import {ModalDialogComponent} from "./shared/modal-dialog.component";
 import {NotificationService} from "./core/notification/notification.service";
-import {NotificationComponent} from "./shared/notification.component";
-import {ConfirmDeactivateGuard} from "./shared/confirm-deactivate.guard";
-import {PopoverComponent} from "./shared/popover.component";
-import {JsTreeAngularWrapperComponent} from "./shared/js-tree-angular-wrapper.component";
 import {PackageRegistryService} from "./analysis-context/package-registry.service";
 import {TechnologiesReportComponent} from "./reports/technologies/technologies-report.component";
 import {LoginComponent} from "./components/login.component";
@@ -58,9 +46,6 @@ import {TechReportService} from "./reports/technologies/tech-report.service";
 import {DependenciesReportComponent} from "./reports/dependencies/dependencies-report.component";
 import {DependenciesService} from "./reports/dependencies/dependencies.service";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
-import {ContextMenuComponent} from "./shared/navigation/context-menu.component";
-import {GroupLayoutComponent} from "./group/group-layout.component";
-import {DefaultLayoutComponent} from "./shared/layout/default-layout.component";
 import {ApplicationGroupResolve} from "./group/application-group.resolve";
 import {RouteLinkProviderService} from "./core/routing/route-link-provider-service";
 import {ConfigurationResolve} from "./configuration/configuration.resolve";
@@ -77,50 +62,26 @@ import {HintService} from "./services/graph/hint.service";
 import {ReportFilterComponent} from "./reports/filter/report-filter.component";
 import {ReportFilterService} from "./reports/filter/report-filter.service";
 import {ReportFilterResolve} from "./reports/filter/report-filter.resolve";
-import {CustomSelectComponent} from "./shared/custom-select/custom-select.component";
 import {ReportFilterIndicatorComponent} from "./reports/filter/report-filter-indicator.component";
 import {ApplicationDetailsComponent} from "./reports/application-details/application-details.component";
-import {NgxChartsModule} from "@swimlane/ngx-charts";
 import {ApplicationIndexComponent} from "./reports/application-index/application-index.component";
 import {AggregatedStatisticsService} from "./reports/application-index/aggregated-statistics.service";
-import {PackageChartComponent} from "./shared/package-chart/package-chart.component";
 import {ApplicationDetailsService} from "./reports/application-details/application-details.service";
 import {TechnologyTagComponent} from "./reports/technology-tag/technology-tag.component";
 import {PrettyPathPipe} from "./reports/pretty-path.pipe";
 import {EventBusService} from "./core/events/event-bus.service";
 import {WindupExecutionService} from "./services/windup-execution.service";
-import {SchedulerService} from "./shared/scheduler.service";
 import {ActiveExecutionsProgressbarComponent} from "./executions/active-executions-progressbar.component";
 import {TagDataService} from "./reports/tag-data.service";
 import {RuleProviderExecutionsService} from "./reports/rule-provider-executions/rule-provider-executions.service";
 import {RuleProviderExecutionsComponent} from "./reports/rule-provider-executions/rule-provider-executions.component";
 import {initializeModelMappingData} from "./generated/tsModels/discriminator-mapping-data";
 import {RouteHistoryService} from "./core/routing/route-history.service";
-import {ChosenModule} from "./shared/chosen/chosen.module";
 import {DependenciesGraphComponent} from "./reports/dependencies/dependencies-graph.component";
 import {NoProjectsWelcomeComponent} from "./project/no-projects-welcome.component";
-import {SortComponent} from "./shared/sort/sort.component";
-import {SearchComponent} from "./shared/search/search.component";
-import {MomentModule} from "angular2-moment";
-import {FileUploadModule, FileUploader} from "ng2-file-upload";
-import {WizardComponent} from "./shared/wizard/wizard.component";
-import {DurationPipe} from "./shared/duration.pipe";
-import {TabContainerComponent} from "./shared/tabs/tab-container.component";
-import {TabComponent} from "./shared/tabs/tab.component";
-import {LogViewComponent} from "./shared/log-view/log-view.component";
 import {ExecutionDetailComponent} from "./executions/execution-detail.component";
-import {SortIndicatorComponent} from "./shared/sort/sort-indicator.component";
-import {SortableTableComponent} from "./shared/sort/sortable-table.component";
-import {StatusIconComponent} from "./shared/status-icon.component";
 import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.service";
-import {CoreModule} from "./core/core.module";
 import {SharedModule} from "./shared/shared.module";
-import {ProjectModule} from "./project/project.module";
-import {GroupModule} from "./group/group.module";
-import {ReportsModule} from "./reports/reports.module";
-import {ApplicationModule} from "./registered-application/registered-application.module";
-import {ConfigurationModule} from "./configuration/configuration.module";
-import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -130,28 +91,10 @@ initializeModelMappingData();
 @NgModule({
     imports: [
         BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpModule,
+
         routing,
 
-        FileUploadModule,
-
-        // NGX Charts
-        NgxChartsModule,
-        ChosenModule,
-
-        // Moment
-        MomentModule,
-
-        CoreModule,
-        SharedModule,
-        ProjectModule,
-        GroupModule,
-        ReportsModule,
-        ApplicationModule,
-        ConfigurationModule,
-        AnalysisContextModule
+        SharedModule
     ],
     declarations: [
         // pages
@@ -162,6 +105,7 @@ initializeModelMappingData();
         ConfigurationComponent,
         GroupListComponent,
         GroupPageComponent,
+        GroupLayoutComponent,
         MigrationProjectFormComponent,
         ProjectListComponent,
         NoProjectsWelcomeComponent,
@@ -177,55 +121,28 @@ initializeModelMappingData();
         PrettyPathPipe,
 
         // Report components
-        PackageChartComponent,
 
         // Components
         AddRulesPathModalComponent,
         AnalysisContextAdvancedOptionsModalComponent,
-        BreadCrumbsComponent,
-        ConfirmationModalComponent,
-        ModalDialogComponent,
-        NavbarComponent,
-        ProgressBarComponent,
         RulesModalComponent,
         TechnologyComponent,
 
-        UploadQueueComponent,
-        UploadProgressbarComponent,
         CustomRuleSelectionComponent,
-        NotificationComponent,
-        PopoverComponent,
-        JsTreeAngularWrapperComponent,
         LoginComponent,
-        JsTreeAngularWrapperComponent,
         MigrationIssuesComponent,
         MigrationIssuesTableComponent,
         LoginComponent,
-        ContextMenuComponent,
-        GroupLayoutComponent,
-        DefaultLayoutComponent,
-        DefaultLayoutComponent,
         ExecutionsListComponent,
         AllExecutionsComponent,
         GroupExecutionsComponent,
         ReportFilterComponent,
-        CustomSelectComponent,
         ReportFilterIndicatorComponent,
         TechnologyTagComponent,
         ActiveExecutionsProgressbarComponent,
         RuleProviderExecutionsComponent,
         DependenciesGraphComponent,
-        SortComponent,
-        SearchComponent,
-        WizardComponent,
-        DurationPipe,
-        TabContainerComponent,
-        TabComponent,
-        LogViewComponent,
-        ExecutionDetailComponent,
-        SortIndicatorComponent,
-        SortableTableComponent,
-        StatusIconComponent
+        ExecutionDetailComponent
     ],
     providers: [
         appRoutingProviders,
@@ -234,7 +151,6 @@ initializeModelMappingData();
         ApplicationGroupService,
         ConfigurationService,
         ConfigurationOptionsService,
-        ConfirmDeactivateGuard,
         FileService,
         MigrationPathService,
         MigrationProjectService,
@@ -262,16 +178,11 @@ initializeModelMappingData();
         EventBusService,
         WindupExecutionService,
         TagDataService,
-        SchedulerService,
         RuleProviderExecutionsService,
         RouteHistoryService,
         {
             provide: RouteLinkProviderService,
             useFactory: createRouteLinkProviderService
-        },
-        {
-            provide: FileUploader,
-            useFactory: createFileUploader
         },
         {
             provide: GraphJSONToModelService,
@@ -283,15 +194,6 @@ initializeModelMappingData();
     bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
-
-let fileUploader = null;
-export function createFileUploader() {
-    if (fileUploader != null)
-        return fileUploader;
-
-    fileUploader = new FileUploader({});
-    return fileUploader;
-}
 
 export function createRouteLinkProviderService() {
         return new RouteLinkProviderService(appRoutes);
