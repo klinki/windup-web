@@ -8,20 +8,14 @@ import { AppComponent }  from './components/app.component';
 import {routing, appRoutingProviders} from './app.routing';
 
 import {ProjectListComponent} from "./project/project-list.component";
-import {ApplicationGroupForm} from "./group/application-group-form.component";
-import {GroupListComponent} from "./group/group-list.component";
 import {MigrationProjectFormComponent} from "./project/migration-project-form.component";
-import {GroupPageComponent} from "./group/group.page.component";
 import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
-import {ApplicationGroupService} from "./group/application-group.service";
 import {FileService} from "./services/file.service";
 import {MigrationProjectService} from "./project/migration-project.service";
 import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
-import {ApplicationGroupResolve} from "./group/application-group.resolve";
-import {GroupLayoutComponent} from "./group/group-layout.component";
 import {ProjectResolve} from "./project/project.resolve";
 import {ApplicationResolve} from "./registered-application/application.resolve";
 import {ExecutionsListComponent} from "./executions/executions-list.component";
@@ -42,6 +36,7 @@ import {CoreModule} from "./core/core.module";
 import {ReportsModule} from "./reports/reports.module";
 import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
 import {ConfigurationModule} from "./configuration/configuration.module";
+import {GroupModule} from "./group/group.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -58,16 +53,13 @@ initializeModelMappingData();
         CoreModule,
         ReportsModule,
         AnalysisContextModule,
-        ConfigurationModule
+        ConfigurationModule,
+        GroupModule
     ],
     declarations: [
         // pages
         AppComponent,
         LoginComponent,
-        ApplicationGroupForm,
-        GroupListComponent,
-        GroupPageComponent,
-        GroupLayoutComponent,
         MigrationProjectFormComponent,
         ProjectListComponent,
         NoProjectsWelcomeComponent,
@@ -82,7 +74,6 @@ initializeModelMappingData();
     ],
     providers: [
         appRoutingProviders,
-        ApplicationGroupService,
         FileService,
         MigrationProjectService,
         RegisteredApplicationService,
@@ -91,7 +82,6 @@ initializeModelMappingData();
         ClassificationService,
         HintService,
         FramesRestClientService,
-        ApplicationGroupResolve,
         ProjectResolve,
         ApplicationResolve,
         WindupExecutionService,
