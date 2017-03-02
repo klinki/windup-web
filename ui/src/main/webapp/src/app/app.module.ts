@@ -11,22 +11,16 @@ import {RegisterApplicationFormComponent} from "./registered-application/registe
 import {FileService} from "./services/file.service";
 import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
-import {LoginComponent} from "./components/login.component";
-import {ProjectLayoutComponent} from "./project/project-layout.component";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
 import {ApplicationResolve} from "./registered-application/application.resolve";
-import {ExecutionsListComponent} from "./executions/executions-list.component";
-import {AllExecutionsComponent} from "./executions/all-executions.component";
-import {SourceReportComponent} from "./reports/source/source-report.component";
 import {FileModelService} from "./services/graph/file-model.service";
 import {ClassificationService} from "./services/graph/classification.service";
 import {HintService} from "./services/graph/hint.service";
 import {WindupExecutionService} from "./services/windup-execution.service";
-import {ActiveExecutionsProgressbarComponent} from "./executions/active-executions-progressbar.component";
 import {initializeModelMappingData} from "./generated/tsModels/discriminator-mapping-data";
-import {ExecutionDetailComponent} from "./executions/execution-detail.component";
 import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.service";
+import {LoginComponent} from "./components/login.component";
 import {ApplicationListComponent} from "./registered-application/application-list.component";
 import {ProjectExecutionsComponent} from "./executions/project-executions.component";
 import {CoreModule} from "./core/core.module";
@@ -36,6 +30,7 @@ import {AnalysisContextModule} from "./analysis-context/analysis-context.module"
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {GroupModule} from "./group/group.module";
 import {ProjectModule} from "./project/project.module";
+import {ExecutionsModule} from "./executions/executions.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -54,7 +49,8 @@ initializeModelMappingData();
         AnalysisContextModule,
         ConfigurationModule,
         GroupModule,
-        ProjectModule
+        ProjectModule,
+        ExecutionsModule
     ],
     declarations: [
         // pages
@@ -62,15 +58,6 @@ initializeModelMappingData();
         LoginComponent,
         RegisterApplicationFormComponent,
         EditApplicationFormComponent,
-        LoginComponent,
-        ProjectLayoutComponent,
-        ExecutionsListComponent,
-        AllExecutionsComponent,
-        GroupExecutionsComponent,
-        ActiveExecutionsProgressbarComponent,
-        ExecutionDetailComponent,
-        ApplicationListComponent,
-        ProjectExecutionsComponent
     ],
     providers: [
         appRoutingProviders,
