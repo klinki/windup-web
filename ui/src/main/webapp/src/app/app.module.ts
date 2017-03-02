@@ -7,16 +7,12 @@ import 'rxjs/Rx';
 import { AppComponent }  from './components/app.component';
 import {routing, appRoutingProviders} from './app.routing';
 
-import {ProjectListComponent} from "./project/project-list.component";
-import {MigrationProjectFormComponent} from "./project/migration-project-form.component";
 import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
 import {FileService} from "./services/file.service";
-import {MigrationProjectService} from "./project/migration-project.service";
 import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
-import {ProjectResolve} from "./project/project.resolve";
 import {ApplicationResolve} from "./registered-application/application.resolve";
 import {ExecutionsListComponent} from "./executions/executions-list.component";
 import {AllExecutionsComponent} from "./executions/all-executions.component";
@@ -27,7 +23,6 @@ import {HintService} from "./services/graph/hint.service";
 import {WindupExecutionService} from "./services/windup-execution.service";
 import {ActiveExecutionsProgressbarComponent} from "./executions/active-executions-progressbar.component";
 import {initializeModelMappingData} from "./generated/tsModels/discriminator-mapping-data";
-import {NoProjectsWelcomeComponent} from "./project/no-projects-welcome.component";
 import {ExecutionDetailComponent} from "./executions/execution-detail.component";
 import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.service";
 import {LoginComponent} from "./components/login.component";
@@ -37,6 +32,7 @@ import {ReportsModule} from "./reports/reports.module";
 import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {GroupModule} from "./group/group.module";
+import {ProjectModule} from "./project/project.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -54,15 +50,13 @@ initializeModelMappingData();
         ReportsModule,
         AnalysisContextModule,
         ConfigurationModule,
-        GroupModule
+        GroupModule,
+        ProjectModule
     ],
     declarations: [
         // pages
         AppComponent,
         LoginComponent,
-        MigrationProjectFormComponent,
-        ProjectListComponent,
-        NoProjectsWelcomeComponent,
         RegisterApplicationFormComponent,
         EditApplicationFormComponent,
 
@@ -75,14 +69,12 @@ initializeModelMappingData();
     providers: [
         appRoutingProviders,
         FileService,
-        MigrationProjectService,
         RegisteredApplicationService,
         WindupService,
         FileModelService,
         ClassificationService,
         HintService,
         FramesRestClientService,
-        ProjectResolve,
         ApplicationResolve,
         WindupExecutionService,
         {
