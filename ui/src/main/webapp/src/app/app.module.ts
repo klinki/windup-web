@@ -7,13 +7,9 @@ import 'rxjs/Rx';
 import { AppComponent }  from './components/app.component';
 import {routing, appRoutingProviders} from './app.routing';
 
-import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
 import {FileService} from "./services/file.service";
-import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
-import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
-import {ApplicationResolve} from "./registered-application/application.resolve";
 import {FileModelService} from "./services/graph/file-model.service";
 import {ClassificationService} from "./services/graph/classification.service";
 import {HintService} from "./services/graph/hint.service";
@@ -21,8 +17,6 @@ import {WindupExecutionService} from "./services/windup-execution.service";
 import {initializeModelMappingData} from "./generated/tsModels/discriminator-mapping-data";
 import {GraphJSONToModelService} from "./services/graph/graph-json-to-model.service";
 import {LoginComponent} from "./components/login.component";
-import {ApplicationListComponent} from "./registered-application/application-list.component";
-import {ProjectExecutionsComponent} from "./executions/project-executions.component";
 import {CoreModule} from "./core/core.module";
 import {SharedModule} from "./shared/shared.module";
 import {ReportsModule} from "./reports/reports.module";
@@ -31,6 +25,8 @@ import {ConfigurationModule} from "./configuration/configuration.module";
 import {GroupModule} from "./group/group.module";
 import {ProjectModule} from "./project/project.module";
 import {ExecutionsModule} from "./executions/executions.module";
+import {ApplicationModule} from "./registered-application/registered-application.module";
+
 
 /**
  * Load all mapping data from the generated files.
@@ -50,25 +46,22 @@ initializeModelMappingData();
         ConfigurationModule,
         GroupModule,
         ProjectModule,
-        ExecutionsModule
+        ExecutionsModule,
+        ApplicationModule
     ],
     declarations: [
         // pages
         AppComponent,
-        LoginComponent,
-        RegisterApplicationFormComponent,
-        EditApplicationFormComponent,
+        LoginComponent
     ],
     providers: [
         appRoutingProviders,
         FileService,
-        RegisteredApplicationService,
         WindupService,
         FileModelService,
         ClassificationService,
         HintService,
         FramesRestClientService,
-        ApplicationResolve,
         WindupExecutionService,
         {
             provide: GraphJSONToModelService,
