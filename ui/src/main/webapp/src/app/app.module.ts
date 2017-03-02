@@ -7,13 +7,9 @@ import 'rxjs/Rx';
 import { AppComponent }  from './components/app.component';
 import {routing, appRoutingProviders} from './app.routing';
 
-import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
 import {FileService} from "./services/file.service";
-import {RegisteredApplicationService} from "./registered-application/registered-application.service";
 import {WindupService} from "./services/windup.service";
-import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
-import {ApplicationResolve} from "./registered-application/application.resolve";
 import {FileModelService} from "./services/graph/file-model.service";
 import {ClassificationService} from "./services/graph/classification.service";
 import {HintService} from "./services/graph/hint.service";
@@ -29,6 +25,8 @@ import {ConfigurationModule} from "./configuration/configuration.module";
 import {GroupModule} from "./group/group.module";
 import {ProjectModule} from "./project/project.module";
 import {ExecutionsModule} from "./executions/executions.module";
+import {ApplicationModule} from "./registered-application/registered-application.module";
+
 
 /**
  * Load all mapping data from the generated files.
@@ -48,25 +46,22 @@ initializeModelMappingData();
         ConfigurationModule,
         GroupModule,
         ProjectModule,
-        ExecutionsModule
+        ExecutionsModule,
+        ApplicationModule
     ],
     declarations: [
         // pages
         AppComponent,
-        LoginComponent,
-        RegisterApplicationFormComponent,
-        EditApplicationFormComponent
+        LoginComponent
     ],
     providers: [
         appRoutingProviders,
         FileService,
-        RegisteredApplicationService,
         WindupService,
         FileModelService,
         ClassificationService,
         HintService,
         FramesRestClientService,
-        ApplicationResolve,
         WindupExecutionService,
         {
             provide: GraphJSONToModelService,
