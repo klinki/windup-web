@@ -8,11 +8,8 @@ import { AppComponent }  from './components/app.component';
 import {routing, appRoutingProviders} from './app.routing';
 
 import {ProjectListComponent} from "./project/project-list.component";
-import {ApplicationGroupForm} from "./group/application-group-form.component";
-import {GroupListComponent} from "./group/group-list.component";
 import {MigrationProjectFormComponent} from "./project/migration-project-form.component";
 import {RegisterApplicationFormComponent} from "./registered-application/register-application-form.component";
-import {ApplicationGroupService} from "./group/application-group.service";
 import {FileService} from "./services/file.service";
 import {MigrationProjectService} from "./project/migration-project.service";
 import {RegisteredApplicationService} from "./registered-application/registered-application.service";
@@ -21,10 +18,6 @@ import {LoginComponent} from "./components/login.component";
 import {ProjectLayoutComponent} from "./project/project-layout.component";
 import {EditApplicationFormComponent} from "./registered-application/edit-application-form.component";
 import {FramesRestClientService} from './services/graph/frames-rest-client.service';
-import {ProjectLayoutComponent} from "./project/project-layout.component";
-import {DefaultLayoutComponent} from "./shared/layout/default-layout.component";
-import {RouteLinkProviderService} from "./core/routing/route-link-provider-service";
-import {ConfigurationResolve} from "./configuration/configuration.resolve";
 import {ProjectResolve} from "./project/project.resolve";
 import {ApplicationResolve} from "./registered-application/application.resolve";
 import {ExecutionsListComponent} from "./executions/executions-list.component";
@@ -46,6 +39,7 @@ import {SharedModule} from "./shared/shared.module";
 import {ReportsModule} from "./reports/reports.module";
 import {AnalysisContextModule} from "./analysis-context/analysis-context.module";
 import {ConfigurationModule} from "./configuration/configuration.module";
+import {GroupModule} from "./group/group.module";
 
 /**
  * Load all mapping data from the generated files.
@@ -62,7 +56,8 @@ initializeModelMappingData();
         CoreModule,
         ReportsModule,
         AnalysisContextModule,
-        ConfigurationModule
+        ConfigurationModule,
+        GroupModule
     ],
     declarations: [
         // pages
@@ -75,16 +70,9 @@ initializeModelMappingData();
         EditApplicationFormComponent,
         LoginComponent,
         ProjectLayoutComponent,
-        ExecutionsLayoutComponent,
-        DefaultLayoutComponent,
-        WizardLayoutComponent,
-        BreadCrumbsNavigationComponent,
-        DefaultLayoutComponent,
         ExecutionsListComponent,
         AllExecutionsComponent,
-        ReportFilterComponent,
-        ReportFilterIndicatorComponent,
-        TechnologyTagComponent,
+        GroupExecutionsComponent,
         ActiveExecutionsProgressbarComponent,
         ExecutionDetailComponent,
         ApplicationListComponent,
