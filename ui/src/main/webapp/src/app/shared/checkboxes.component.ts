@@ -13,6 +13,14 @@ export type ItemType = any;
 })
 export class CheckboxesComponent implements OnInit, OnChanges
 {
+    private _options: ItemType[];
+
+    // For faster lookup of what option was clicked
+    private valueToOptionMap: Map<string, ItemType> = new Map<string, ItemType>();
+
+    private component: CheckboxesComponent;
+    private rootElement;
+
     /**
      * The name of this checkboxes group.
      */
@@ -49,14 +57,10 @@ export class CheckboxesComponent implements OnInit, OnChanges
             option => this.valueToOptionMap.set(this.valueCallback(option), option)
         );
     }
-    get options(): ItemType[]{
+
+    get options(): ItemType[] {
         return this._options;
     }
-    _options: ItemType[];
-
-    // For faster lookup of what option was clicked
-    private valueToOptionMap: Map<string, ItemType> = new Map<string, ItemType>();
-
 
     /**
      * This can be either the values or a subset of options.
@@ -66,6 +70,19 @@ export class CheckboxesComponent implements OnInit, OnChanges
 
     @Output()
     checkedOptionsChange = new EventEmitter<string[] | ItemType[]>();
+
+    /**
+     * Determines whether the checked options are returned as string values only (see valueCallback),
+     * or as a subset of options (object references).
+     * This is useful when checkedOptions is empty and we don't know which of these to set.
+     */
+    @Input()
+    checkedOptionsAreValuesOnly: boolean | null = null;
+
+    public constructor(element: ElementRef, private _zone: NgZone) {
+        this.component = this;
+        this.rootElement = element.nativeElement;
+    }
 
     shouldBeChecked(option: ItemType): boolean {
         console.log("shouldBeChecked() called.", option, this.checkedOptions);
@@ -86,14 +103,6 @@ export class CheckboxesComponent implements OnInit, OnChanges
         return res;
     }
 
-    /**
-     * Determines whether the checked options are returned as string values only (see valueCallback),
-     * or as a subset of options (object references).
-     * This is useful when checkedOptions is empty and we don't know which of these to set.
-     */
-    @Input()
-    checkedOptionsAreValuesOnly: boolean | null = null;
-
     private initCheckedOptionsAreValuesOnly() {
         if (!this.checkedOptions || this.checkedOptions.length == 0)
             return; // Leave as is.
@@ -107,13 +116,9 @@ export class CheckboxesComponent implements OnInit, OnChanges
 
 
 
-    private component: CheckboxesComponent;
-    private rootElement;
 
-    public constructor(element: ElementRef, private _zone: NgZone) {
-        this.component = this;
-        this.rootElement = element.nativeElement;
-    }
+
+
 
     public ngOnChanges(changes: {[options: string]: SimpleChange}): any {
         console.warn("onChanges", changes['options']);
