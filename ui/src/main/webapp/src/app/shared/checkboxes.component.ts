@@ -1,6 +1,5 @@
 import {Component, OnInit, Input, ElementRef, SimpleChange, Output, EventEmitter, NgZone, OnChanges} from "@angular/core";
 import * as $ from "jquery";
-import {isString} from "util";
 import {isFunction} from "util";
 
 export type ItemType = any;
@@ -9,7 +8,7 @@ export type ItemType = any;
     templateUrl: './checkboxes.component.html',
     selector: 'wu-checkboxes'
 })
-export class CheckboxesComponent implements OnInit, OnChanges
+export class CheckboxesComponent
 {
     private _options: ItemType[];
     private _checkedOptions: ItemType[];
@@ -127,48 +126,14 @@ export class CheckboxesComponent implements OnInit, OnChanges
         return res;
     }
 
-    public ngOnChanges(changes: {[options: string]: SimpleChange}): any {
-        console.warn("onChanges", changes['options']);
-
-        /* /// This is handled by the setter?
-        if (changes.hasOwnProperty('options')) {
-            let newOptions: CheckboxData[] = changes['options'].currentValue;
-            this.options = newOptions;
-        }
-        */
-
-        if (changes.hasOwnProperty('checkedOptions')) {
-            this.checkedOptions = changes['checkedOptions'].currentValue;
-        }
-
-        ///this.setChangeHandlersToCheckboxes();
-    }
-
-    public ngOnInit() {
-        //this.setChangeHandersToCheckboxes();
-    }
-
-    private setChangeHandlersToCheckboxes() {
-        console.log("setChangeHandersToCheckboxes() called");
-        /*setTimeout(() => {
-            $(this.rootElement).find(":checkbox")
-                .off()
-                .change((event, data) => this.updateCheckedValues(event, data));
-        }, 2000);*/
-    }
-
     handleCheckboxChange(option: ItemType, $event)  {
         console.log("handleCheckboxChange() called", option, $event);
-        //$event.target.checked;
         this.updateCheckedValues();
     }
 
     private updateCheckedValues(): void {
-        //this._zone.run(() => {
-            this.checkedOptions = this.getCheckedValues();
-            this.checkedOptionsChange.emit(this.checkedOptions);
-            //this.onCheckedChange.emit(this.checkedOptions);
-        //});
+        this.checkedOptions = this.getCheckedValues();
+        this.checkedOptionsChange.emit(this.checkedOptions);
         console.log("updateCheckedValues() done", this.checkedOptions);
     }
 
