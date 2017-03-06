@@ -103,14 +103,6 @@ export class CheckboxesComponent implements OnInit, OnChanges
     @Output()
     checkedOptionsChange = new EventEmitter<string[] | ItemType[]>();
 
-    /**
-     * Determines whether the checked options are returned as string values only (see valueCallback),
-     * or as a subset of options (object references).
-     * This is useful when checkedOptions is empty and we don't know which of these to set.
-     */
-    @Input()
-    checkedOptionsAreValuesOnly: boolean | null = null;
-
     public constructor(element: ElementRef, private _zone: NgZone) {
         this.component = this;
         this.rootElement = element.nativeElement;
@@ -134,23 +126,6 @@ export class CheckboxesComponent implements OnInit, OnChanges
         console.log("shouldBeChecked() says " + res);
         return res;
     }
-
-    private initCheckedOptionsAreValuesOnly() {
-        if (!this.checkedOptions || this.checkedOptions.length == 0)
-            return; // Leave as is.
-
-        this.checkedOptionsAreValuesOnly = isString(this.checkedOptions[0]);
-    }
-
-    /// Does this duplicate checkedOptionsChange?
-    //@Output()
-    //onCheckedChange = new EventEmitter<string[] | ItemType[]>();
-
-
-
-
-
-
 
     public ngOnChanges(changes: {[options: string]: SimpleChange}): any {
         console.warn("onChanges", changes['options']);
@@ -204,9 +179,6 @@ export class CheckboxesComponent implements OnInit, OnChanges
                 if (!domElement['checked'])
                     return null;
                 let val = domElement["value"];
-
-                if (component.checkedOptionsAreValuesOnly)
-                    return val;
 
                 let clickedOption = component.valueToOptionMap.get(val);
                 if (!clickedOption)
