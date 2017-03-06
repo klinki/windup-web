@@ -1,9 +1,7 @@
 import {Component, OnInit, Input, ElementRef, SimpleChange, Output, EventEmitter, NgZone, OnChanges} from "@angular/core";
-import {Package} from "windup-services";
 import * as $ from "jquery";
-import {RegisteredApplication} from "windup-services";
 import {isString} from "util";
-import {handleError} from "typings/dist/support/cli";
+import {isFunction} from "util";
 
 export type ItemType = any;
 
@@ -14,6 +12,11 @@ export type ItemType = any;
 export class CheckboxesComponent implements OnInit, OnChanges
 {
     private _options: ItemType[];
+    private _checkedOptions: ItemType[];
+
+    private _equalsCallback: (a: any, b: any) => boolean = (a, b) => a === b;
+    private _labelCallback: (a: any) => string = (a) => a;
+    private _valueCallback: (a: any) => any = (a) => a;
 
     // For faster lookup of what option was clicked
     private valueToOptionMap: Map<string, ItemType> = new Map<string, ItemType>();
@@ -31,31 +34,50 @@ export class CheckboxesComponent implements OnInit, OnChanges
      * Callbacks
      */
     @Input()
-    valueCallback: (item: any) => string
-        = app => { throw new Error("valueCallback not yet defined." +
-                " This means Angular didn't keep the order of setting @Inputs."); };
+    public set valueCallback(callback: (item: any) => any) {
+        if (callback && isFunction(callback)) {
+            this._valueCallback = callback;
+        }
+    }
+
+    public get valueCallback() {
+        return this._valueCallback;
+    }
 
     @Input()
-    labelCallback: (item: ItemType) => string;
+    public set equalsCallback(callback: (a: any, b: any) => boolean) {
+        if (callback && isFunction(callback)) {
+            this._equalsCallback = callback;
+        }
+    }
+
+    public get equalsCallback() {
+        return this._equalsCallback;
+    }
 
     @Input()
-    equalsCallback: (item1: ItemType, item2: ItemType) => boolean;
+    public set labelCallback(callback: (a: any) => string) {
+        if (callback && isFunction(callback)) {
+            this._labelCallback = callback;
+        }
+    }
+
+    public get labelCallback() {
+        return this._labelCallback;
+    }
 
     /**
      * All available options.
      */
     @Input()
-    set options(options: ItemType[]){
-        this._options = options;
-        console.log("set options()", options);
-        if (!options)
-            return; // May be loaded async.
-        if (!Array.isArray(options))
-            throw new Error("Invalid @Input value for options: " + JSON.stringify(options));
+    set options(options: ItemType[]) {
+        if (options && !Array.isArray(options)) {
+            throw new Error("Invalid value for options. Expecting array, got: " + JSON.stringify(options));
+        }
 
-        options.forEach(
-            option => this.valueToOptionMap.set(this.valueCallback(option), option)
-        );
+        this._options = options || [];
+
+        this._options.forEach(option => this.valueToOptionMap.set(this.valueCallback(option), option));
     }
 
     get options(): ItemType[] {
@@ -65,8 +87,18 @@ export class CheckboxesComponent implements OnInit, OnChanges
     /**
      * This can be either the values or a subset of options.
      */
-    @Input() //@Output()
-    checkedOptions: string[] | ItemType[] = [];
+    @Input()
+    public set checkedOptions(checkedOptions: ItemType[]) {
+        if (checkedOptions && !Array.isArray(checkedOptions)) {
+            throw new Error("Invalid value for checkedOptions. Expecting array, got: " + JSON.stringify(checkedOptions));
+        }
+
+        this._checkedOptions = checkedOptions || [];
+    }
+
+    public get checkedOptions() {
+        return this._checkedOptions;
+    }
 
     @Output()
     checkedOptionsChange = new EventEmitter<string[] | ItemType[]>();
