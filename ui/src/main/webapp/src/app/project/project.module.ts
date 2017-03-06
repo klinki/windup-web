@@ -8,6 +8,7 @@ import {MigrationProjectService} from "./migration-project.service";
 import {ProjectResolve} from "./project.resolve";
 import {SharedModule} from "../shared/shared.module";
 import {ExecutionsModule} from "../executions/executions.module";
+import {ProjectLayoutComponent} from "./project-layout.component";
 
 @NgModule({
     imports: [
@@ -17,11 +18,13 @@ import {ExecutionsModule} from "../executions/executions.module";
     declarations: [
         MigrationProjectFormComponent,
         NoProjectsWelcomeComponent,
-        ProjectListComponent
+        ProjectListComponent,
+        ProjectLayoutComponent
     ],
     exports: [
         MigrationProjectFormComponent,
-        ProjectListComponent
+        ProjectListComponent,
+        ProjectLayoutComponent
     ],
     providers: [
         MigrationProjectService,

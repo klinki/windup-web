@@ -6,7 +6,6 @@ import {ApplicationGroupService} from "./application-group.service";
 import {ApplicationGroupResolve} from "./application-group.resolve";
 import {SharedModule} from "../shared/shared.module";
 import {RouterModule} from "@angular/router";
-import {GroupLayoutComponent} from "./group-layout.component";
 
 @NgModule({
     imports: [
@@ -17,13 +16,11 @@ import {GroupLayoutComponent} from "./group-layout.component";
         ApplicationGroupForm,
         GroupPageComponent,
         GroupListComponent,
-        GroupLayoutComponent
     ],
     exports: [
         ApplicationGroupForm,
         GroupPageComponent,
         GroupListComponent,
-        GroupLayoutComponent
     ],
     providers: [
         ApplicationGroupService,
