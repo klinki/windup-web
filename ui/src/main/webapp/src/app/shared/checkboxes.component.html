@@ -1,5 +1,4 @@
-
-
+<div class="checkboxes-component">
     <div *ngFor="let option of _options">
         <label>
             <input type="checkbox" [name]="groupName"
@@ -9,9 +8,5 @@
                    />
             {{labelCallback(option)}}
         </label>
-        <!--
-        [checked]="checkedOptions.indexOf(valueCallback(option)) != -1"
-        {{valueCallback(option)}}
-        (change)="updateCheckedOptions(valueCallback(option), $event)"
-        -->
     </div>
+</div>
