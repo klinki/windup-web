@@ -37,8 +37,8 @@ export class ExecutionsLayoutComponent extends ProjectLayoutComponent implements
         _migrationProjectService: MigrationProjectService,
         _eventBus: EventBusService,
         _router: Router,
-        private _windupService: WindupService,
-        private _datePipe: DatePipe
+        protected _windupService: WindupService,
+        protected _datePipe: DatePipe
     ) {
         super(_activatedRoute, _routeLinkProviderService, _migrationProjectService, _eventBus, _router);
     }
