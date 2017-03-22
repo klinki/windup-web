@@ -19,7 +19,7 @@ import {Subject, ReplaySubject} from "rxjs";
  */
 @Injectable()
 export class RouteFlattenerService {
-    protected flatRouteLoaded = new ReplaySubject<FlattenedRouteData>(1);
+    protected flatRouteLoaded = new Subject<FlattenedRouteData>();
     public OnFlatRouteLoaded = this.flatRouteLoaded.asObservable();
 
     public onNewRouteActivated(route: ActivatedRouteSnapshot) {
