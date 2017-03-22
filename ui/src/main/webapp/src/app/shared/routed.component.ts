@@ -14,11 +14,6 @@ export abstract class RoutedComponent extends AbstractComponent {
         protected _routeFlattener: RouteFlattenerService
     ) {
         super();
-
-        this.addSubscription(this._router.events.filter(event => event instanceof NavigationEnd).subscribe(_ => {
-            let flatRouteData = this._routeFlattener.getFlattenedRouteData(this._activatedRoute.snapshot);
-
-            this.flatRouteLoaded.next(flatRouteData);
-        }));
+        this._routeFlattener.OnFlatRouteLoaded.subscribe(flatRoute => this.flatRouteLoaded.next(flatRoute));
     }
 }
