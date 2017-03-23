@@ -45,12 +45,12 @@ export class ProjectLayoutComponent extends RoutedComponent implements OnInit, O
                 this.createContextMenuItems();
         }));
 
-        this._activatedRoute.data.subscribe((data: {project: MigrationProject}) => {
+        this.addSubscription(this._activatedRoute.data.subscribe((data: {project: MigrationProject}) => {
             this.project = data.project;
 
             this._migrationProjectService.monitorProject(this.project);
             this.createContextMenuItems();
-        });
+        }));
 
         this.loadProjects();
     }

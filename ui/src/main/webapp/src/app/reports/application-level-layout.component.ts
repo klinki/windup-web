@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ExecutionsLayoutComponent} from "../executions/executions-layout.component";
-import {WindupExecution, RegisteredApplication} from "windup-services";
+import {RegisteredApplication} from "windup-services";
 import {RouteLinkProviderService} from "../core/routing/route-link-provider-service";
 import {WindupService} from "../services/windup.service";
 import {EventBusService} from "../core/events/event-bus.service";
@@ -18,6 +18,7 @@ type Application = any; //RegisteredApplication|FilterApplication;
 export class ApplicationLevelLayoutComponent extends ExecutionsLayoutComponent implements OnInit {
     public allApplications: (RegisteredApplication|FilterApplication)[];
     public application: RegisteredApplication|FilterApplication;
+    protected applicationId: number;
 
     constructor(
         _router: Router,
@@ -41,20 +42,34 @@ export class ApplicationLevelLayoutComponent extends ExecutionsLayoutComponent i
         );
     }
 
-
     ngOnInit(): void {
         super.ngOnInit();
-        this.flatRouteLoaded.subscribe(data => {
-            this.allApplications = this.execution.filterApplications;
+        this.flatRouteLoaded.subscribe(flatRoute => {
+            this.applicationId = +flatRoute.params.applicationId;
         });
     }
 
+    protected loadSelectedExecution(executionId: number) {
+        let observable = super.loadSelectedExecution(executionId);
+        observable.subscribe(execution => {
+            this.allApplications = execution.filterApplications;
+            this.application = this.allApplications.find(app => app.id === this.applicationId);
+        });
+
+        return observable;
+    }
+
     public getApplicationLabel = (application: Application): string => {
-        return application.fileName;
+        return application ? application.fileName : '';
     };
 
     public getApplicationRoute = (application: Application): any[] => {
-        return application ? ['/projects', this.project.id, 'reports', this.execution.id, 'applications', application.id] : null;
+        let executionRoute = this.getExecutionRoute(this.execution);
+
+
+        return application && executionRoute ?
+            executionRoute.concat(['applications', application.id]) :
+            null;
     };
 
     public navigateToApplication = (application: Application) => {

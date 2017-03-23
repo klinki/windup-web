@@ -46,27 +46,33 @@ export class ExecutionsLayoutComponent extends ProjectLayoutComponent implements
     }
 
     ngOnInit(): void {
-        this.flatRouteLoaded.subscribe(flatRoute => {
+        this.addSubscription(this.flatRouteLoaded.subscribe(flatRoute => {
             this.project = flatRoute.data.project;
 
             this.loadProjectExecutions();
             this.loadProjects();
 
             let executionId = +flatRoute.params.executionId;
-            this._eventBus.onEvent
+            this.addSubscription(this._eventBus.onEvent
                 .filter(event => event.isTypeOf(ExecutionEvent))
                 .filter((event: ExecutionEvent) => event.execution.id === executionId)
                 .subscribe((event: ExecutionEvent) => {
                     this.execution = event.execution;
                     this.createContextMenuItems();
-                });
+                }));
 
-            this._windupService.getExecution(executionId).subscribe(execution => {
-                this.execution = execution;
-                this.createContextMenuItems();
-            });
+            this.loadSelectedExecution(executionId);
+        }));
+    }
 
+    protected loadSelectedExecution(executionId: number) {
+        let observable = this._windupService.getExecution(executionId);
+        observable.subscribe(execution => {
+            this.execution = execution;
+            this.createContextMenuItems();
         });
+
+        return observable;
     }
 
     protected loadProjectExecutions() {
