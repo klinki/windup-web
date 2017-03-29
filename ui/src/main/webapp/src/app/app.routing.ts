@@ -31,6 +31,7 @@ import {ProjectExecutionsComponent} from "./executions/project-executions.compon
 import {WizardLayoutComponent} from "./shared/layout/wizard-layout.component";
 import {ExecutionsLayoutComponent} from "./executions/executions-layout.component";
 import {ApplicationLevelLayoutComponent} from "./reports/application-level-layout.component";
+import {ExecutionResolve} from "./executions/execution.resolve";
 
 export const executionLevelRoutes: Routes = [
     {path: '', component: ExecutionDetailComponent, data: {displayName: 'Execution Info'}},
@@ -153,6 +154,9 @@ export const appRoutes: Routes = [
                                 data: {
                                     breadcrumbTitle: getExecutionBreadcrumbTitle
                                 },
+                                resolve: {
+                                    execution: ExecutionResolve
+                                },
                                 component: ExecutionsLayoutComponent,
                                 children: executionLevelRoutes
                             },
@@ -160,6 +164,9 @@ export const appRoutes: Routes = [
                                 path: 'reports/:executionId/applications/:applicationId',
                                 data: {
                                     breadcrumbTitle: getExecutionBreadcrumbTitle
+                                },
+                                resolve: {
+                                    execution: ExecutionResolve
                                 },
                                 component: ApplicationLevelLayoutComponent,
                                 children: executionLevelRoutes

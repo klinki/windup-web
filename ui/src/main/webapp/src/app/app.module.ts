@@ -121,6 +121,7 @@ import {ApplicationLevelLayoutComponent} from "./reports/application-level-layou
 import {SelectApplicationsComponent} from "./analysis-context/select-applications.component";
 import {ContextMenuLinkComponent} from "./shared/navigation/context-menu-link.component";
 import {SourceResolve} from "./reports/source/source.resolve";
+import {ExecutionResolve} from "./executions/execution.resolve";
 
 /**
  * Load all mapping data from the generated files.
@@ -264,6 +265,7 @@ initializeModelMappingData();
         SchedulerService,
         RuleProviderExecutionsService,
         RouteHistoryService,
+        ExecutionResolve,
         {
             provide: RouteLinkProviderService,
             useFactory: createRouteLinkProviderService
