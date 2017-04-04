@@ -6,5 +6,5 @@ package org.jboss.windup.web.services.data;
 public abstract class ServiceConstants
 {
     public static final String REST_BASE = "";
-    public static final String FURNACE_REST_BASE = "api";
+    public static final String FURNACE_REST_BASE = "furnace";
 }
