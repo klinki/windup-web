@@ -39,7 +39,7 @@ https://access.redhat.com/documentation/en/red-hat-single-sign-on/7.0/single/get
  * Startup with offset 200 to avoid conflicts with your local EAP and arquillian instances:
    * `./standalone.sh -Djboss.socket.binding.port-offset=200`
 
- * Install the EAP 7 Adapter into the EAP instance that will run Windup Web
+ * Install the EAP 7 Adapter into the EAP instance that will run RHAMT Web Console
    * Download the RH-SSO-7.0.0-eap7-adapter.zip and unzip it into the root directory of your EAP 7 installation
    * Run the installer:
      * `cd bin`
@@ -58,10 +58,9 @@ https://access.redhat.com/documentation/en/red-hat-single-sign-on/7.0/single/get
     * Add this new role to the "Default Roles"
     * Create a new test user(s) for this realm. Assign the user role to it.
 
-* Create a new client with ID `rhamt-web`, root URL: [http://localhost:8080/rhamt-web/](http://localhost:8080/windup-web/) (note that you'll create the `rhamt-web-services` client respectively)
-    * On the settings page, make sure that both of the following URLs are listed as Valid Redirect URIs (add the one that is missing):
+* Create a new client with ID `rhamt-web`, root URL: [http://localhost:8080/rhamt-web/](http://localhost:8080/rhamt-web/)
+    * On the settings page, make sure that the following URL is listed as Valid Redirect URIs (add if if it is missing):
       * `http://localhost:8080/rhamt-web/*`
-      * `http://localhost:8080/rhamt-web-services/*`
 
     * Click on the "Installation" tab, and select the "Keycloak OIDC JBoss Subsystem XML" format option
     * With the RHAMT's server off, open up `standalone-full.xml` and paste this text into the`urn:jboss:domain:keycloak:1.1` subsystem element
@@ -86,8 +85,8 @@ https://access.redhat.com/documentation/en/red-hat-single-sign-on/7.0/single/get
       <auth-server-url>${keycloak.server.url}</auth-server-url>
       ```
 
-* Now **create another Keycloak client the  for `rhamt-web-services`**.
-  * Repeat the same steps, except use the name **rhamt-web-services** instead of **rhamt-web**.
-  * The `<realm-public-key>` will be the same, no need for another system property.
+* Now **copy secure-deployment configuration for `rhamt-web/api`**.
+  * Copy `<secure-deployment name="rhamt-web.war">` and insert it below, use name **rhamt-web/api** instead of **rhamt-web**.
+  * Change `<resource>` name to `rhamt-web/api`
 
 
