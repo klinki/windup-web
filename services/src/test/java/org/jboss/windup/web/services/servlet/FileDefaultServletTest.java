@@ -49,7 +49,7 @@ public class FileDefaultServletTest extends AbstractTest
         Path tempFile = Files.createTempFile(reportsDir, TESTFILE_PREFIX, ".file");
 
         HttpClient httpClient = HttpClients.createDefault();
-        final String testFileUrl = baseURL.toURI().toString() + "staticReport/" + tempFile.getFileName();
+        final String testFileUrl = baseURL.toURI().toString() + "static-report/" + tempFile.getFileName();
         HttpResponse response = httpClient.execute(new HttpGet(testFileUrl));
         int exec = response.getStatusLine().getStatusCode();
         log.info("FileServlet returned HTTP code: " + exec);
