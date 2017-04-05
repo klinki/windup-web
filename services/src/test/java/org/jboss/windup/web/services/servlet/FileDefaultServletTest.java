@@ -13,6 +13,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.windup.web.furnaceserviceprovider.FromFurnace;
 import org.jboss.windup.web.services.AbstractTest;
+import org.jboss.windup.web.tests.authentication.KeycloakAuthenticationHelper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.windup.web.addons.websupport.WebPathUtil;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.MultivaluedMap;
 
 @RunWith(Arquillian.class)
 public class FileDefaultServletTest extends AbstractTest
@@ -50,7 +52,13 @@ public class FileDefaultServletTest extends AbstractTest
 
         HttpClient httpClient = HttpClients.createDefault();
         final String testFileUrl = baseURL.toURI().toString() + "static-report/" + tempFile.getFileName();
-        HttpResponse response = httpClient.execute(new HttpGet(testFileUrl));
+        String token = KeycloakAuthenticationHelper.getAccessToken();
+
+        HttpGet get = new HttpGet(testFileUrl);
+        get.removeHeaders("Authorization");
+        get.addHeader("Authorization", "Bearer " + token);
+        HttpResponse response = httpClient.execute(get);
+        
         int exec = response.getStatusLine().getStatusCode();
         log.info("FileServlet returned HTTP code: " + exec);
 
