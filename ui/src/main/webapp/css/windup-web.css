@@ -120,7 +120,6 @@ td {
 }
 
 .container-fluid .wu-frame {
-    padding-top: 40px;
     background: #EDF1F2;
     margin-left: 20px !important;
     margin-right: 20px !important;
@@ -138,4 +137,12 @@ form .wizard-form {
 
 label.required:before {
     content: '* ';
+}
+
+.wu-horizontal-nav-content {
+    margin-top: 122px;
+}
+
+.wu-horizontal-nav-content.container-fluid, .wu-horizontal-nav-content .container-fluid {
+    padding-top: inherit;
 }
