@@ -49,7 +49,7 @@
                 </div>
 
                 <div *ngIf="areRulesLoaded(rulePath) && !hasFileBasedProviders(rulePath)">
-                    <h3 i18n>No rule found.</h3>
+                    <h3 i18n>No rules found.</h3>
                 </div>
 
                 <div *ngIf="rulePath.loadError">
@@ -65,7 +65,7 @@
                         </div>
                         -->
                         <div class="list-view-pf-actions" style="margin-left: 5px;">
-                            <button class="btn btn-default" (click)="displayRules(ruleProvider, $event)" i18n="Button">Show rules</button>
+                            <button class="btn btn-default" (click)="displayRules(ruleProvider, $event)" i18n="Button">Show Rules</button>
                         </div>
                         <div class="list-view-pf-main-info">
                             <div class="list-view-pf-left">
