@@ -1,8 +1,11 @@
-import {browser} from "protractor";
+import {ProjectPage} from "./pages/project.po";
+import {CreateProjectWorkflow} from "./workflows/create-project.wf";
 
 describe('Project List', () => {
+    const projectPage = new ProjectPage();
+
     beforeEach(() => {
-        browser.get('/');
+        projectPage.navigateTo();
     });
 
     describe('Empty project list', () => {
@@ -12,6 +15,16 @@ describe('Project List', () => {
 
         it('Should show create project button', () => {
 
+        });
+    });
+
+    describe('Create project', () => {
+        beforeAll(() => {
+            const workflow = new CreateProjectWorkflow();
+            workflow.createProject('Test');
+        });
+
+        it('Should do nothing at all :) ', () => {
         });
     });
 });
