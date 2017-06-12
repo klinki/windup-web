@@ -5,7 +5,7 @@ import {AnalysisConfigurationPage} from "../pages/wizard/analysis-configuration.
 import {browser, by, element} from "protractor";
 
 
-
+// TODO: Parametrize this - maybe use ENV variable?
 const UPLOAD_FILE_PATH = '/home/dklingen/Downloads/mariadb-java-client-1.5.5.jar';
 
 export class CreateProjectWorkflow {

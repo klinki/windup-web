@@ -1,24 +1,38 @@
 const SpecReporter = require('jasmine-spec-reporter');
 
 function login() {
+    // TODO: Load URL from some ENV variable or somewhere....
     browser.driver.get('http://localhost:8080/rhamt-web/');
 
-    browser.driver.findElement(by.id('username')).sendKeys('test');
-    browser.driver.findElement(by.id('password')).sendKeys('test');
-    browser.driver.findElement(by.id('kc-login')).click();
+    // TODO: parametrize these
+    const pathRegex = /rhamt-web/;
+    const username = 'test';
+    const password = 'test';
 
-    // Login takes some time, so wait until it's done.
-    // For the test app's login, we know it's done when it redirects to
-    // index.html.
-    return browser.driver.wait(function() {
-        return browser.driver.getCurrentUrl().then(function(url) {
-            return /rhamt-web/.test(url);
-        });
-    }, 10000);
+    return browser.driver.getCurrentUrl().then(function(url) {
+        if (!pathRegex.test(url)) {
+            browser.driver.findElement(by.id('username')).sendKeys(username);
+            browser.driver.findElement(by.id('password')).sendKeys(password);
+            browser.driver.findElement(by.id('kc-login')).click();
+
+            // Login takes some time, so wait until it's done.
+            // For the test app's login, we know it's done when it redirects to
+            // index.html.
+            return browser.driver.wait(function() {
+                return browser.driver.getCurrentUrl().then(function(url) {
+                    return pathRegex.test(url);
+                });
+            }, 10000);
+        }
+    });
 }
 
 
 exports.config = {
+    /**
+     *  TODO: baseUrl doesn't seem to work as expected
+     *  (I'd expect browser.get('/') to match baseUrl, but it goes to http://localhost:8080 instead)
+     */
     baseUrl: 'http://localhost:8080/rhamt-web/',
     specs: [
         'tests/e2e/**/*.e2e.ts'

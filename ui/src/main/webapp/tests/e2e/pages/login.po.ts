@@ -1,5 +1,9 @@
 import {browser, by, element} from "protractor";
 
+/**
+ * TODO: This seems to be required in onPrepare phase, I'm not sure if it can be used from this file
+ * (it would be probably better)
+ */
 export class LoginPage {
     username = element(by.css('#username'));
     password = element(by.css('#password'));
