@@ -4,6 +4,10 @@ export class ProjectPage {
     newProjectButton = element(by.css('.btn.btn-primary'));
     projectList = element.all(by.css('.list-group-item.project-info.tile-click'));
 
+    projectListDiv = element(by.css('.projects-list'));
+
+    emptyStateDiv = element(by.css('.blank-slate-pf'));
+
     public navigateTo() {
         return browser.get('/rhamt-web/');
     }
