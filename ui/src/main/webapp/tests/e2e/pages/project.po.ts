@@ -1,7 +1,8 @@
-import {browser, by, element} from "protractor";
+import {browser, by, element, ElementFinder} from "protractor";
 
 export class ProjectPage {
     newProjectButton = element(by.css('.btn.btn-primary'));
+    projectList = element.all(by.css('.list-group-item.project-info.tile-click'));
 
     public navigateTo() {
         return browser.get('/rhamt-web/');
@@ -25,4 +26,55 @@ export class ProjectPage {
 
     public deleteProject() {
     }
+// |Promise<Project[]>
+    public getProjectList(): Promise<any[]> {
+        return this.projectList.map(element => {
+            const project = {
+                name: '',
+                description: '',
+                countApplications: '',
+                lastUpdated: '',
+                editButton: element.element(by.css('.action-edit-project')),
+                deleteButton: element.element(by.css('.action-delete-project'))
+            };
+
+            return Promise.all([
+                element.element(by.css('.project-title')).getText().then(title => project.name = title),
+                element.element(by.css('.count-applications')).getText().then(count => project.countApplications = count),
+                element.element(by.css('.last-updated')).getText().then(lastUpdated => project.lastUpdated = lastUpdated),
+                element.element(by.css('.description')).getText().then(description => project.description = description),
+            ]).then(() => project);
+        });
+/*
+        return (this.projectList.then((elements: ElementFinder[]): Promise<any[]> => {
+            // Promise<project>[]
+            return Promise.all(elements.map((element, index, array) => {
+                const project = {
+                    name: '',
+                    description: '',
+                    countApplications: '',
+                    lastUpdated: '',
+                    editButton: element.element(by.css('.action-edit-project')),
+                    deleteButton: element.element(by.css('.action-delete-project'))
+                };
+
+                return Promise.all([
+                    element.element(by.css('.project-title')).getText().then(title => project.name = title),
+                    element.element(by.css('.count-applications')).getText().then(count => project.countApplications = count),
+                    element.element(by.css('.last-updated')).getText().then(lastUpdated => project.lastUpdated = lastUpdated),
+                    element.element(by.css('.description')).getText().then(description => project.description = description),
+                ]).then(() => project);
+            }));
+        }));
+*/
+    }
+}
+
+export interface Project {
+    name: string;
+    description: string;
+    countApplications: string;
+    lastUpdated: string;
+    editButton;
+    deleteButton;
 }

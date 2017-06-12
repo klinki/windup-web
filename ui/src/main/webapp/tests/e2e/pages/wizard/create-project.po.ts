@@ -16,6 +16,6 @@ export class CreateProjectPage {
     }
 
     public clickNext() {
-        this.next.click();
+        return this.next.click();
     }
 }
