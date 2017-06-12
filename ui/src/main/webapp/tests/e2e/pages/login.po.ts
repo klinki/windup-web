@@ -13,8 +13,5 @@ export class LoginPage {
         this.username.sendKeys(user);
         this.password.sendKeys(password);
         this.loginButton.click();
-        // username
-        // password
-        // kc-login
     }
 }

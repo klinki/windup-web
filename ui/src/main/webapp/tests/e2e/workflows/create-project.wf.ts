@@ -23,28 +23,50 @@ export class CreateProjectWorkflow {
                 return addApplications.registerFileByServerPath(UPLOAD_FILE_PATH);
             })
             .then(() => {
-//                promise.then();
                 const analysisConfig = new AnalysisConfigurationPage();
-                browser.sleep(1);
-                return analysisConfig.clickSave().then(() => {
-                    console.log('FIND CONFIRM BUTTON');
+                return analysisConfig.clickSave();
+            })
+            .then(() => {
+                console.log('FIND CONFIRM BUTTON');
+                return browser.sleep(100);
+            }).then(() => {
+                /**
+                 * Something is broken here (a lot).
+                 *
+                 * We need to test if modal dialog is displayed and if it is, click button.
+                 * BUT, protractor always freezes on `isPresent()` call. (And it seems to freeze on `click()` too).
+                 *
+                 * So it is basically impossible to get over this right now :(
+                 */
 
-                    const confirmButton = element(by.css('.confirm-button'));
+                console.log('after sleep');
 
-                    console.log('just logging');
+                const confirmButton = element(by.css('.confirm-button'));
 
-                    return confirmButton.isPresent()
-                        .then(isPresent => {
-                            console.log('Is present?');
-                            console.log(isPresent);
-                            if (isPresent) {
-                                return confirmButton.click();
-                            }
-                        }, error => {
-                            console.log('is not present');
-                            console.log(error);
-                        });
+                const modal = element(by.css('.modal'));
+
+                modal.isPresent().then(isPresent => {
+                    console.log('Modal is present? ' + isPresent);
                 });
+
+                //console.log(confirmButton);
+
+                return confirmButton.click();
+/*
+                console.log('just logging');
+
+                return browser.isElementPresent(confirmButton)
+//                return confirmButton.isPresent()
+                    .then(isPresent => {
+                        console.log('Is present?');
+                        console.log(isPresent);
+                        if (isPresent) {
+                            return confirmButton.click();
+                        }
+                    }, error => {
+                        console.log('error');
+                        console.log(error);
+                    });*/
             });
     }
 }
