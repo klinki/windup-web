@@ -141,10 +141,22 @@ export module utils {
 }
 
 interface ResolvedInterface<T, K extends keyof T> {
-    resolved: Pick<T, K>;
+    resolved: Record<K, any>; // Pick<T, K>;
 }
 
 /**
  * Object with data in resolved field
  */
 export type ResolvedObject<T, K extends keyof T> = T & ResolvedInterface<T, K>;
+
+/*
+type UnwrapObservable<T extends Observable<K> | any, K> = K;
+
+export interface Cat { name: string, weight: Observable<number> }
+
+let a: Observable<Cat>;
+let b: UnwrapObservable<Observable<Cat>, Cat>;
+let c: ResolvedObject<Cat, 'weight'>;
+
+declare function mapObject<K extends string, T, U>(obj: Record<K, T>, f: (x: T) => U): Record<K, U>;
+*/

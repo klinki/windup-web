@@ -66,7 +66,7 @@ export class TechnologiesEJBReportComponent implements OnInit {
     }
 
     fetchEJBData(): void {
-        this.techReportService.getEjbMessageDrivenModel(this.execID).subscribe(
+        Observables.resolveValuesArray(this.techReportService.getEjbMessageDrivenModel(this.execID), ['ejbClass']).subscribe(
             value => {
                 this.ejbMessageDriven = value;
                 this.filteredEjbMessageDriven = this.ejbMessageDriven;
@@ -77,13 +77,6 @@ export class TechnologiesEJBReportComponent implements OnInit {
                 this._router.navigate(['']);
             }
         );
-
-
-        Observables.resolveValuesArray(this.techReportService.getEjbMessageDrivenModel(this.execID), ['ejbClass'])
-            .subscribe(data => {
-                console.log('data: ');
-                console.log(data);
-            });
 
         this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateless').subscribe(
             value => {
@@ -97,12 +90,6 @@ export class TechnologiesEJBReportComponent implements OnInit {
                 this._router.navigate(['']);
             }
         );
-
-        Observables.resolveValuesArray(this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateless'), ['globalJndiReference', 'ejbDeploymentDescriptor'])
-            .subscribe(data => {
-                console.log('data: ');
-                console.log(data);
-            });
 
         this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateful').subscribe(
             value => {
@@ -167,7 +154,8 @@ export class TechnologiesEJBReportComponent implements OnInit {
         });*/
 
         //item.resolved.ejbClass.simpleName;
+        return item.resolved.ejbClass.simpleName;
 
-        return (this.fake++).toString();
+        //return (this.fake++).toString();
     };
 }
