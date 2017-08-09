@@ -3,7 +3,7 @@ import {ActivatedRoute, Params, Router}   from '@angular/router';
 
 import {TechReportService, StatsItem} from "./tech-report.service";
 import {NotificationService} from "../../core/notification/notification.service";
-import {utils} from '../../shared/utils';
+import {ResolvedObject, utils} from '../../shared/utils';
 import {ProjectTechnologiesStatsModel} from "../../generated/tsModels/ProjectTechnologiesStatsModel";
 import {forkJoin} from "rxjs/observable/forkJoin";
 import {ProjectModel} from "../../generated/tsModels/ProjectModel";
@@ -16,6 +16,7 @@ import {JavaClassFileModel} from "../../generated/tsModels/JavaClassFileModel";
 import {JavaClassModel} from "../../generated/tsModels/JavaClassModel";
 import {EjbSessionBeanModel} from "../../generated/tsModels/EjbSessionBeanModel";
 import {EjbEntityBeanModel} from "../../generated/tsModels/EjbEntityBeanModel";
+import Observables = utils.Observables;
 
 @Component({
     selector: 'wu-technologies-report-ejb',
@@ -77,6 +78,13 @@ export class TechnologiesEJBReportComponent implements OnInit {
             }
         );
 
+
+        Observables.resolveValuesArray(this.techReportService.getEjbMessageDrivenModel(this.execID), ['ejbClass'])
+            .subscribe(data => {
+                console.log('data: ');
+                console.log(data);
+            });
+
         this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateless').subscribe(
             value => {
                 this.ejbSessionStatelessBean = value;
@@ -89,6 +97,12 @@ export class TechnologiesEJBReportComponent implements OnInit {
                 this._router.navigate(['']);
             }
         );
+
+        Observables.resolveValuesArray(this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateless'), ['globalJndiReference', 'ejbDeploymentDescriptor'])
+            .subscribe(data => {
+                console.log('data: ');
+                console.log(data);
+            });
 
         this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateful').subscribe(
             value => {
@@ -145,12 +159,15 @@ export class TechnologiesEJBReportComponent implements OnInit {
 
 
 
-    sortByQualifiedNameCallback = (item: EjbMessageDrivenModel) : string => {
+    sortByQualifiedNameCallback = (item: ResolvedObject<EjbMessageDrivenModel, 'ejbClass'>) : string => {
 /*        item.ejbClass.subscribe( clazz => {
             let qualifiedName = clazz.qualifiedName;
             console.log(qualifiedName);
             return qualifiedName;
         });*/
+
+        //item.resolved.ejbClass.simpleName;
+
         return (this.fake++).toString();
     };
 }
