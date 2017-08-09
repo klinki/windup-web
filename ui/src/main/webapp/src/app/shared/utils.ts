@@ -1,4 +1,5 @@
 import {Observable} from "rxjs/Observable";
+import {EjbMessageDrivenModel} from "../generated/tsModels/EjbMessageDrivenModel";
 
 export function substringAfterLast(str, delimiter) {
     return str.substring(str.lastIndexOf(delimiter) + 1); // +1 trick for no occurence.
@@ -150,13 +151,32 @@ interface ResolvedInterface<T, K extends keyof T> {
 export type ResolvedObject<T, K extends keyof T> = T & ResolvedInterface<T, K>;
 
 /*
-type UnwrapObservable<T extends Observable<K> | any, K> = K;
-
-export interface Cat { name: string, weight: Observable<number> }
-
-let a: Observable<Cat>;
-let b: UnwrapObservable<Observable<Cat>, Cat>;
-let c: ResolvedObject<Cat, 'weight'>;
-
-declare function mapObject<K extends string, T, U>(obj: Record<K, T>, f: (x: T) => U): Record<K, U>;
-*/
+ * Type declarations to unwrap observable:
+ *
+ *
+ *
+ *   declare function resolveValuesArray<R>(
+ *       arrayObservable: Observable<{[k in keyof R]: Observable<R[k]>}[]>,
+ *       props: (keyof R)[]
+ *   ): Observable<({[k in keyof R]: Observable<R[k]>} & {resolved: R})[]>;
+ *
+ * -----------------
+ *
+ * type ArrayObservable<R> = Observable<{[k in keyof R]: Observable<R[k]>}[]>;
+ *
+ * declare function resolveValuesArray<R, P extends keyof R>(arrayObservable: ArrayObservable<R>, props: P[]):
+ *   Observable<(ArrayObservable<R> & { resolved: Pick<R, P> })[]>
+ *
+ *
+ * ------------ test code --------------------------------
+ * export interface Mice { name: string }
+ *    export interface Cat { weight: Observable<number>, mice: Observable<Mice> }
+ *
+ *   let x: Observable<Cat[]> = null;
+ *   let y = resolveValuesArray(x, ['weight', 'mice']);
+ *   y.subscribe(data => {
+ *       data[0].resolved.mice.name;
+ *       data[0].resolved.weight;
+ *   });
+ *
+ */
