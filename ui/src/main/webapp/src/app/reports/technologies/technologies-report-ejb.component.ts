@@ -17,6 +17,11 @@ import {JavaClassModel} from "../../generated/tsModels/JavaClassModel";
 import {EjbSessionBeanModel} from "../../generated/tsModels/EjbSessionBeanModel";
 import {EjbEntityBeanModel} from "../../generated/tsModels/EjbEntityBeanModel";
 import Observables = utils.Observables;
+import nullCoalesce = utils.nullCoalesce;
+
+type ResolvedEjbSessionBeanModel = ResolvedObject<EjbSessionBeanModel, 'ejbLocal' | 'ejbRemote' | 'ejbClass' | 'globalJndiReference'>;
+type ResolvedEjbMessageDrivenModel = ResolvedObject<EjbMessageDrivenModel, 'destination' | 'ejbClass'>;
+type ResolvedEjbEntityBeanModel = ResolvedObject<EjbEntityBeanModel, 'ejbLocal' | 'ejbRemote' | 'ejbClass'>;
 
 @Component({
     selector: 'wu-technologies-report-ejb',
@@ -28,21 +33,21 @@ export class TechnologiesEJBReportComponent implements OnInit {
     private execID: number;
     private reportId: Observable<string>;
 
-    private ejbMessageDriven: EjbMessageDrivenModel[] = [];
-    private filteredEjbMessageDriven : EjbMessageDrivenModel[] = [];
-    private sortedEjbMessageDriven : EjbMessageDrivenModel[] = [];
+    private ejbMessageDriven: ResolvedEjbMessageDrivenModel[] = [];
+    private filteredEjbMessageDriven : ResolvedEjbMessageDrivenModel[] = [];
+    private sortedEjbMessageDriven : ResolvedEjbMessageDrivenModel[] = [];
 
-    private ejbSessionStatelessBean: EjbSessionBeanModel[] = [];
-    private filteredEjbSessionStatelessBean: EjbSessionBeanModel[] = [];
-    private sortedEjbSessionStatelessBean: EjbSessionBeanModel[] = [];
+    private ejbSessionStatelessBean: ResolvedEjbSessionBeanModel[] = [];
+    private filteredEjbSessionStatelessBean: ResolvedEjbSessionBeanModel[] = [];
+    private sortedEjbSessionStatelessBean: ResolvedEjbSessionBeanModel[] = [];
 
-    private ejbSessionStatefulBean: EjbSessionBeanModel[] = [];
-    private filteredEjbSessionStatefulBean: EjbSessionBeanModel[] = [];
-    private sortedEjbSessionStatefulBean: EjbSessionBeanModel[] = [];
+    private ejbSessionStatefulBean: ResolvedEjbSessionBeanModel[] = [];
+    private filteredEjbSessionStatefulBean: ResolvedEjbSessionBeanModel[] = [];
+    private sortedEjbSessionStatefulBean: ResolvedEjbSessionBeanModel[] = [];
 
-    private ejbEntityBean: EjbEntityBeanModel[] = [];
-    private filteredEjbEntityBean: EjbEntityBeanModel[] = [];
-    private sortedEjbEntityBean: EjbEntityBeanModel[] = [];
+    private ejbEntityBean: ResolvedEjbEntityBeanModel[] = [];
+    private filteredEjbEntityBean: ResolvedEjbEntityBeanModel[] = [];
+    private sortedEjbEntityBean: ResolvedEjbEntityBeanModel[] = [];
 
     public searchText: string;
 
@@ -66,7 +71,7 @@ export class TechnologiesEJBReportComponent implements OnInit {
     }
 
     fetchEJBData(): void {
-        Observables.resolveValuesArray(this.techReportService.getEjbMessageDrivenModel(this.execID), ['ejbClass']).subscribe(
+        Observables.resolveValuesArray(this.techReportService.getEjbMessageDrivenModel(this.execID), ['ejbClass', 'destination']).subscribe(
             value => {
                 this.ejbMessageDriven = value;
                 this.filteredEjbMessageDriven = this.ejbMessageDriven;
@@ -78,7 +83,8 @@ export class TechnologiesEJBReportComponent implements OnInit {
             }
         );
 
-        this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateless').subscribe(
+        Observables.resolveValuesArray(this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateless'),
+            ['ejbLocal', 'ejbRemote', 'ejbClass', 'globalJndiReference']).subscribe(
             value => {
                 this.ejbSessionStatelessBean = value;
                 this.filteredEjbSessionStatelessBean = this.ejbSessionStatelessBean;
@@ -91,7 +97,8 @@ export class TechnologiesEJBReportComponent implements OnInit {
             }
         );
 
-        this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateful').subscribe(
+        Observables.resolveValuesArray(this.techReportService.getEjbSessionBeanModel(this.execID, 'Stateful'),
+            ['ejbLocal', 'ejbRemote', 'ejbClass', 'globalJndiReference']).subscribe(
             value => {
                 this.ejbSessionStatefulBean = value;
                 this.filteredEjbSessionStatefulBean = this.ejbSessionStatefulBean;
@@ -103,7 +110,8 @@ export class TechnologiesEJBReportComponent implements OnInit {
             }
         );
 
-        this.techReportService.getEjbEntityBeanModel(this.execID).subscribe(
+        Observables.resolveValuesArray(this.techReportService.getEjbEntityBeanModel(this.execID),
+            ['ejbLocal', 'ejbRemote', 'ejbClass']).subscribe(
             value => {
                 this.ejbEntityBean = value;
                 this.filteredEjbEntityBean = this.ejbEntityBean;
@@ -119,18 +127,34 @@ export class TechnologiesEJBReportComponent implements OnInit {
 
     updateSearch() {
         if (this.searchText && this.searchText.length > 0) {
-            this.filteredEjbMessageDriven = this.ejbMessageDriven.filter(mdb => (
-                mdb.beanName.search(new RegExp(this.searchText, 'i')) !== -1)
-            );
-            this.filteredEjbSessionStatelessBean = this.ejbSessionStatelessBean.filter(ejb => (
-                ejb.beanName.search(new RegExp(this.searchText, 'i')) !== -1)
-            );
-            this.filteredEjbSessionStatefulBean = this.ejbSessionStatefulBean.filter(ejb => (
-                ejb.beanName.search(new RegExp(this.searchText, 'i')) !== -1)
-            );
-            this.filteredEjbEntityBean = this.ejbEntityBean.filter(ejb => (
-                ejb.beanName.search(new RegExp(this.searchText, 'i')) !== -1)
-            );
+            const regex = new RegExp(this.searchText, 'i');
+
+            this.filteredEjbMessageDriven = this.ejbMessageDriven.filter(mdb => {
+                return mdb.beanName.search(regex) !== -1
+                    || mdb.resolved.destination.jndiLocation.search(regex) !== -1
+                    || mdb.resolved.ejbClass.qualifiedName.search(regex) !== -1;
+            });
+
+            this.filteredEjbSessionStatelessBean = this.ejbSessionStatelessBean.filter(ejb => {
+                return ejb.beanName.search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbLocal, '', 'qualifiedName').search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbRemote, '', 'qualifiedName').search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbClass, '', 'qualifiedName').search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.globalJndiReference, '', 'jndiLocation').search(regex) !== -1;
+            });
+            this.filteredEjbSessionStatefulBean = this.ejbSessionStatefulBean.filter(ejb => {
+                return ejb.beanName.search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbLocal, '', 'qualifiedName').search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbRemote, '', 'qualifiedName').search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbClass, '', 'qualifiedName').search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.globalJndiReference, '', 'jndiLocation').search(regex) !== -1;
+            });
+            this.filteredEjbEntityBean = this.ejbEntityBean.filter(ejb => {
+                return ejb.beanName.search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbLocal, '', 'qualifiedName').search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbRemote, '', 'qualifiedName').search(regex) !== -1
+                    || nullCoalesce(ejb.resolved.ejbClass, '', 'qualifiedName').search(regex) !== -1;
+            });
         } else {
             this.filteredEjbMessageDriven = this.ejbMessageDriven;
             this.filteredEjbSessionStatelessBean = this.ejbSessionStatelessBean;
@@ -146,16 +170,7 @@ export class TechnologiesEJBReportComponent implements OnInit {
 
 
 
-    sortByQualifiedNameCallback = (item: ResolvedObject<EjbMessageDrivenModel, 'ejbClass'>) : string => {
-/*        item.ejbClass.subscribe( clazz => {
-            let qualifiedName = clazz.qualifiedName;
-            console.log(qualifiedName);
-            return qualifiedName;
-        });*/
-
-        //item.resolved.ejbClass.simpleName;
+    sortByQualifiedNameCallback = (item: ResolvedEjbMessageDrivenModel) : string => {
         return item.resolved.ejbClass.simpleName;
-
-        //return (this.fake++).toString();
     };
 }
