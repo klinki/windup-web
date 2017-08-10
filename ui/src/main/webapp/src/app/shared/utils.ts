@@ -47,11 +47,15 @@ export module utils {
         let currentObject = object;
 
         for (let property of propertiesPath) {
-            if (currentObject === null || currentObject === undefined || !currentObject.hasOwnProperty(property)) {
+            if (currentObject === null || currentObject === undefined /* || !currentObject.hasOwnProperty(property) */ ) {
                 return defaultValue;
             }
 
             currentObject = currentObject[property];
+        }
+
+        if (currentObject === null || currentObject === undefined) {
+            return defaultValue;
         }
 
         return currentObject;
