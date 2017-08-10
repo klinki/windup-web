@@ -135,20 +135,16 @@ export class TechnologiesEJBReportComponent implements OnInit {
                     || mdb.resolved.ejbClass.qualifiedName.search(regex) !== -1;
             });
 
-            this.filteredEjbSessionStatelessBean = this.ejbSessionStatelessBean.filter(ejb => {
+            const filterEjbSessionBean = (ejb: ResolvedEjbSessionBeanModel) => {
                 return ejb.beanName.search(regex) !== -1
                     || nullCoalesce(ejb.resolved.ejbLocal, '', 'qualifiedName').search(regex) !== -1
                     || nullCoalesce(ejb.resolved.ejbRemote, '', 'qualifiedName').search(regex) !== -1
                     || nullCoalesce(ejb.resolved.ejbClass, '', 'qualifiedName').search(regex) !== -1
                     || nullCoalesce(ejb.resolved.globalJndiReference, '', 'jndiLocation').search(regex) !== -1;
-            });
-            this.filteredEjbSessionStatefulBean = this.ejbSessionStatefulBean.filter(ejb => {
-                return ejb.beanName.search(regex) !== -1
-                    || nullCoalesce(ejb.resolved.ejbLocal, '', 'qualifiedName').search(regex) !== -1
-                    || nullCoalesce(ejb.resolved.ejbRemote, '', 'qualifiedName').search(regex) !== -1
-                    || nullCoalesce(ejb.resolved.ejbClass, '', 'qualifiedName').search(regex) !== -1
-                    || nullCoalesce(ejb.resolved.globalJndiReference, '', 'jndiLocation').search(regex) !== -1;
-            });
+            };
+
+            this.filteredEjbSessionStatelessBean = this.ejbSessionStatelessBean.filter(ejb => filterEjbSessionBean(ejb));
+            this.filteredEjbSessionStatefulBean = this.ejbSessionStatefulBean.filter(ejb => filterEjbSessionBean(ejb));
             this.filteredEjbEntityBean = this.ejbEntityBean.filter(ejb => {
                 return ejb.beanName.search(regex) !== -1
                     || nullCoalesce(ejb.resolved.ejbLocal, '', 'qualifiedName').search(regex) !== -1
